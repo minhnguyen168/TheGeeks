@@ -9,8 +9,9 @@ from flask import jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
-from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm)
+from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm)
 from app.models import (User, client, banker, financialdec)
+from app.news import (News)
 import stripe
 
 
@@ -134,3 +135,15 @@ def logoutclient():
 def logoutbanker():
     logout_user()
     return redirect(url_for('banker'))
+
+@app.route('/client/news', methods=['GET', 'POST']) 
+def news(): 
+    news_form = NewsFilterForm()
+    if news_form.validate_on_submit():
+        start_date = news_form.startdate.data
+        end_date = news_form.enddate.data
+        print(start_date, end_date)
+    news_obj = News()
+    news_df = news_obj.get_financial_news()
+    #news_list = news_df['News_Title'].tolist()
+    return render_template('news.html', news_df=news_df, news_form=news_form)
