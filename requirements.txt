@@ -33,6 +33,7 @@ scipy==1.9.0
 six==1.16.0
 smart-open==6.0.0
 SQLAlchemy==1.4.22
+stripe==4.0.2
 tzdata==2022.1
 tzlocal==4.2
 urllib3==1.26.11
