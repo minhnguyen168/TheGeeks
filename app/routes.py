@@ -29,7 +29,7 @@ def client():
     if clientregister_form.validate_on_submit():
         print('valid')
         hashed_password = bcrypt.generate_password_hash(clientregister_form.password.data).decode('utf-8')
-        user = User(username=clientregister_form.username.data, password=hashed_password,email=clientregister_form.email.data,banker=0)
+        user = User(username=clientregister_form.username.data, nric=clientregister_form.nric.data, password=hashed_password,email=clientregister_form.email.data,banker=0)
         db.session.add(user)
         db.session.commit()
         flash("Your account has been created! You are now able to log in", 'success') 
@@ -53,7 +53,7 @@ def banker():
     if bankerregister_form.validate_on_submit():
         print('valid')
         hashed_password = bcrypt.generate_password_hash(bankerregister_form.password.data).decode('utf-8')
-        user = User(username=bankerregister_form.username.data, password=hashed_password,email=bankerregister_form.email.data,banker=1)
+        user = User(username=bankerregister_form.username.data,nric=bankerregister_form.nric.data, password=hashed_password,email=bankerregister_form.email.data,banker=1)
         db.session.add(user)
         db.session.commit()
         flash("Your account has been created! You are now able to log in", 'success') 

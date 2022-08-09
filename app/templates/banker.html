@@ -31,16 +31,16 @@
 				<div class="fields">
 
 					<div class="field half">
-						{{ bankerlogin_form.username.label(class="form-control-label") }}
-						{% if bankerlogin_form.username.errors %}  
-							{{ bankerlogin_form.username(class="form-control form-control-lg is-invalid") }}
+						{{ bankerlogin_form.email.label(class="form-control-label") }}
+						{% if bankerlogin_form.email.errors %}  
+							{{ bankerlogin_form.email(class="form-control form-control-lg is-invalid") }}
 							<div class="invalid-feedback">
-								{% for error in bankerlogin_form.username.errors %}
+								{% for error in bankerlogin_form.email.errors %}
 									<span>{{ error }}</span> 
 								{% endfor %}
 							</div>
 						{% else %}
-							{{ bankerlogin_form.username(class="form-control form-control-lg") }}
+							{{ bankerlogin_form.email(class="form-control form-control-lg") }}
 						{% endif %}
 					</div>
 					<br>
@@ -77,21 +77,36 @@
 				{{ bankerregister_form.hidden_tag() }}
 				<div class="fields">
 					<div class="field half">
-						{{ bankerregister_form.username.label(class="form-control-label") }}
+						{{ bankerregister_form.name.label(class="form-control-label") }}
 
-						{% if bankerregister_form.username.errors %}  
-							{{ bankerregister_form.username(class="form-control form-control-lg is-invalid") }}
+						{% if bankerregister_form.name.errors %}  
+							{{ bankerregister_form.name(class="form-control form-control-lg is-invalid") }}
 							<div class="invalid-feedback">
-								{% for error in bankerregister_form.username.errors %}
+								{% for error in bankerregister_form.name.errors %}
 									<span>{{ error }}</span> 
 								{% endfor %}
 							</div>
 						{% else %}
-							{{ bankerregister_form.username(class="form-control form-control-lg") }}
+							{{ bankerregister_form.name(class="form-control form-control-lg") }}
 						{% endif %}
 					</div>
 
 					<div class="field half">
+						{{ bankerregister_form.nric.label(class="form-control-label") }}
+
+						{% if bankerregister_form.nric.errors %}  
+							{{ bankerregister_form.nric(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+								{% for error in bankerregister_form.nric.errors %}
+									<span>{{ error }}</span> 
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ bankerregister_form.nric(class="form-control form-control-lg") }}
+						{% endif %}
+					</div>
+
+					<div class="field">
 						{{ bankerregister_form.email.label(class="form-control-label") }}
 						{% if bankerregister_form.email.errors %}  
 							{{ bankerregister_form.email(class="form-control form-control-lg is-invalid") }}

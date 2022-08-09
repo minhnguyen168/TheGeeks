@@ -7,9 +7,9 @@ from flask_login import current_user
 
 
 class ClientRegistrationForm(FlaskForm):
-    username =  StringField("Username", validators=[Required(), Length(min=2, max=20)])
+    name =  StringField("Name", validators=[Required(), Length(min=2, max=20)])
     #name =  StringField("Name", validators=[Required(), Length(min=1, max=40)]) 
-
+    nric = StringField("NRIC", validators=[Required(), Length(min=2, max=20)]) 
     email = StringField('Email', validators=[Required(), Email()]) 
     password = PasswordField('Password', validators=[Required()])
     #contactno = StringField('Contact No.', validators=[Required(), Length(min=8, max=8)]) 
@@ -29,7 +29,7 @@ class ClientRegistrationForm(FlaskForm):
             raise ValidationError('That email is already registered. Please login with your registered account.')
 
 class ClientLoginForm(FlaskForm):
-    username =  StringField("Username", validators=[Required(), Length(min=2, max=20)]) 
+    email =  StringField("Email", validators=[Required(), Email()]) 
 
     password = PasswordField('Password', validators=[Required()])
 
@@ -46,9 +46,9 @@ class ClientLoginForm(FlaskForm):
 #     submit = SubmitField('Update') 
 
 class BankerRegistrationForm(FlaskForm):
-    username =  StringField("Username", validators=[Required(), Length(min=2, max=20)])
+    name =  StringField("Name", validators=[Required(), Length(min=2, max=20)])
     #name =  StringField("Name", validators=[Required(), Length(min=1, max=40)]) 
-
+    nric = StringField("NRIC", validators=[Required(), Length(min=2, max=20)]) 
     email = StringField('Email', validators=[Required(), Email()]) 
     password = PasswordField('Password', validators=[Required()])
     #contactno = StringField('Contact No.', validators=[Required(), Length(min=8, max=8)]) 
@@ -63,7 +63,7 @@ class BankerRegistrationForm(FlaskForm):
             raise ValidationError('That email is already registered. Please login with your registered account.')
 
 class BankerLoginForm(FlaskForm):
-    username =  StringField("Username", validators=[Required(), Length(min=2, max=20)]) 
+    email =  StringField("Email", validators=[Required(), Email()]) 
 
     password = PasswordField('Password', validators=[Required()])
 

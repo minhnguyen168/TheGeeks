@@ -31,16 +31,16 @@
 					<div class="fields">
 
 						<div class="field half">
-							{{ clientlogin_form.username.label(class="form-control-label") }}
-							{% if clientlogin_form.username.errors %}  
-								{{ clientlogin_form.username(class="form-control form-control-lg is-invalid") }}
+							{{ clientlogin_form.email.label(class="form-control-label") }}
+							{% if clientlogin_form.email.errors %}  
+								{{ clientlogin_form.email(class="form-control form-control-lg is-invalid") }}
 								<div class="invalid-feedback">
-									{% for error in clientlogin_form.username.errors %}
+									{% for error in clientlogin_form.email.errors %}
 										<span>{{ error }}</span> 
 									{% endfor %}
 								</div>
 							{% else %}
-								{{ clientlogin_form.username(class="form-control form-control-lg") }}
+								{{ clientlogin_form.email(class="form-control form-control-lg") }}
 							{% endif %}
 						</div>
 						<br>
@@ -77,21 +77,34 @@
 					{{ clientregister_form.hidden_tag() }}
 					<div class="fields">
 						<div class="field half">
-							{{ clientregister_form.username.label(class="form-control-label") }}
+							{{ clientregister_form.name.label(class="form-control-label") }}
 
-							{% if clientregister_form.username.errors %}  
-								{{ clientregister_form.username(class="form-control form-control-lg is-invalid") }}
+							{% if clientregister_form.name.errors %}  
+								{{ clientregister_form.name(class="form-control form-control-lg is-invalid") }}
 								<div class="invalid-feedback">
-									{% for error in clientregister_form.username.errors %}
+									{% for error in clientregister_form.name.errors %}
 										<span>{{ error }}</span> 
 									{% endfor %}
 								</div>
 							{% else %}
-								{{ clientregister_form.username(class="form-control form-control-lg") }}
+								{{ clientregister_form.name(class="form-control form-control-lg") }}
+							{% endif %}
+						</div>
+						<div class="field half">
+							{{ clientregister_form.nric.label(class="form-control-label") }}
+							{% if clientregister_form.nric.errors %}  
+								{{ clientregister_form.nric(class="form-control form-control-lg is-invalid") }}
+								<div class="invalid-feedback">
+									{% for error in clientregister_form.nric.errors %}
+										<span>{{ error }}</span> 
+									{% endfor %}
+								</div>
+							{% else %}
+								{{ clientregister_form.nric(class="form-control form-control-lg") }}
 							{% endif %}
 						</div>
 
-						<div class="field half">
+						<div class="field">
 							{{ clientregister_form.email.label(class="form-control-label") }}
 							{% if clientregister_form.email.errors %}  
 								{{ clientregister_form.email(class="form-control form-control-lg is-invalid") }}

@@ -17,6 +17,30 @@ class User(db.Model, UserMixin):
     dateofbirth = db.Column(db.Integer)
     photo = db.Column(db.String)
     address = db.Column(db.String)
+    NRIC = db.Column(db.String)
+
+class client(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    userid = db.Column(db.Integer)
+    bankerid = db.Column(db.Integer)
+    portfolioid = db.Column(db.Integer)
+
+class banker(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    userid = db.Column(db.Integer)
+    portfolioid = db.Column(db.Integer)
+    clientid = db.Column(db.Integer)
+
+class portfolio(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    portfoliotype = db.Column(db.String(60))
+    risk = db.Column(db.Integer)
+    mininvest = db.Column(db.Integer)
+    description =  db.Column(db.String(240))
+    assettype = db.Column(db.String(60))
+    
+class financialdec(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
 
     #def get_reset_token(self, expires_sec=1800):
     #    s = Serializer(app.config['SECRET_KEY'], expires_sec)
