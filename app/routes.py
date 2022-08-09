@@ -11,6 +11,14 @@ from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
 from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm)
 from app.models import (User)
+import stripe
+
+
+stripe_keys = {
+    "secret_key": 'sk_test_51LUn73DmP0YmkHd0O5l77njV0F1M1QR8LzyaFKahQ8pugfrYV2swno5R7XhipkxbYcYqAgzUCoUBby1EQGEGnhw700852bTBqN',
+    "publishable_key": 'pk_test_51LUn73DmP0YmkHd0j6LTuFIx8dw7qDjpba0Jzi4pgPvwKxIWlKOK1hHzUVD5E89UfmjqyduA2xMEteTTc1biY6jv00bbsb8Ap6'
+}
+stripe.api_key = stripe_keys["secret_key"]
 
 @login_manager.unauthorized_handler
 def unauthorized_callback():
@@ -23,7 +31,7 @@ def landing():
 @app.route('/client',methods=['GET', 'POST'])
 def client():
     if current_user.is_authenticated: 
-        return redirect(url_for('userhome'))
+        return redirect(url_for('clienthome'))
     clientregister_form = ClientRegistrationForm()
     clientlogin_form=ClientLoginForm()
     if clientregister_form.validate_on_submit():
@@ -78,6 +86,33 @@ def clienthome():
 @login_required
 def bankerhome():
     return render_template('bankerlanding.html')
+
+
+### Stripe Integration
+@app.route("/checkout", methods=['GET','POST'])
+@login_required
+def checkout():
+    try:
+        checkout_session = stripe.checkout.Session.create(
+                    line_items=[{'price': 'price_1LUndRDmP0YmkHd0vNgO8WpV','quantity': 1}],
+                    mode='payment',success_url=url_for('success',_external=True),
+                    cancel_url=url_for('cancel',_external=True))
+    except Exception as e:
+        return str(e)
+
+    return redirect(checkout_session.url, code=303)
+
+@app.route("/success", methods=['GET','POST'])
+def success():
+    flash('Purchased Successfully!')
+    return redirect(url_for('clienthome'))
+
+@app.route("/cancel", methods=['GET','POST'])
+def cancel():
+    flash('Purchase Failed!')
+    return redirect(url_for('clienthome'))
+
+### End Stripe Integration
 
 
 @app.route("/client/logout")
