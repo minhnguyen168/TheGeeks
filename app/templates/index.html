@@ -1,0 +1,22 @@
+{% extends "landinglayout.html" %}
+
+{% block content %}
+<!-- Header -->
+	<header id="header">
+		<div class="logo">
+			<span class="icon fa-gem"></span>
+		</div>
+		<div class="content">
+			<div class="inner">
+				<h1>TheGeeks Wealth Management Platform</h1>
+				<p>Your personalised wealth management app. <br> Experience a world of financial expertise at your fingertips. <br> <h2> Select your role below </h2> </p>
+			</div>
+		</div>
+		<nav>
+			<ul>
+				<li><a href="{{url_for('client')}}">Client</a></li>
+				<li><a href="{{url_for('banker')}}">Banker</a></li>
+			</ul>
+		</nav>
+	</header>
+{% endblock %}
