@@ -41,6 +41,29 @@ class portfolio(db.Model):
     
 class financialdec(db.Model):
     id = db.Column(db.Integer, primary_key = True)
+    clientid = db.Column(db.Integer)
+    investmentgoal = db.Column(db.String(120))
+    yeartorealisegoal = db.Column(db.Integer)
+    endgoal = db.Column(db.Integer)
+    age = db.Column(db.Integer)
+    annualincome = db.Column(db.Integer)
+    estimatednetworth = db.Column(db.Integer)
+    initialamount = db.Column(db.Integer)
+    topupamountmonthly = db.Column(db.Integer)
+    valueofcurrentinvestment = db.Column(db.Integer)
+    currentasset = db.Column(db.Integer)
+    currentasset = db.Column(db.Integer)
+    equity = db.Column(db.Integer)
+    fixedincome = db.Column(db.Integer)
+    forexcommodities = db.Column(db.Integer)
+    mutualfund = db.Column(db.Integer)
+    crypto = db.Column(db.Integer)
+    realestate = db.Column(db.Integer)
+    otherinvestment = db.Column(db.Integer)
+    prioritiesofinvestment = db.Column(db.String(120))
+    riskappetite = db.Column(db.Integer)
+    dropvalue = db.Column(db.String(120))
+
 
     #def get_reset_token(self, expires_sec=1800):
     #    s = Serializer(app.config['SECRET_KEY'], expires_sec)
