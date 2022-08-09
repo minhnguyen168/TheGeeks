@@ -10,7 +10,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
 from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm)
-from app.models import (User, client, banker, financialdec)
+from app.models import (User, Client, Banker, Financialdec, Portfolio)
 from app.news import (News)
 import stripe
 
@@ -38,11 +38,11 @@ def client():
     if clientregister_form.validate_on_submit():
         print('valid')
         hashed_password = bcrypt.generate_password_hash(clientregister_form.password.data).decode('utf-8')
-        user = User(name=clientregister_form.name.data, nric=clientregister_form.nric.data, password=hashed_password,email=clientregister_form.email.data,banker=0)
+        user = User(name=clientregister_form.name.data, NRIC=clientregister_form.nric.data, password=hashed_password,email=clientregister_form.email.data,banker=0)
         db.session.add(user)
         db.session.commit()
         db.session.refresh(user)
-        newclient = client(userid=user.id)
+        newclient = Client(userid=user.id)
         db.session.add(newclient)
         db.session.commit()
         flash("Your account has been created! You are now able to log in", 'success') 
@@ -70,7 +70,7 @@ def banker():
         db.session.add(user)
         db.session.commit()
         db.session.refresh(user)
-        newbanker = banker(userid=user.id)
+        newbanker = Banker(userid=user.id)
         db.session.add(newbanker)
         db.session.commit()
         flash("Your account has been created! You are now able to log in", 'success') 

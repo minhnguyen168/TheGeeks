@@ -9,7 +9,7 @@ def load_user(user_id):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True) 
-    username = db.Column(db.String(20), unique=True, nullable=False) 
+    name = db.Column(db.String(20), unique=True, nullable=False) 
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     banker = db.Column(db.Integer, nullable=False)
@@ -19,19 +19,19 @@ class User(db.Model, UserMixin):
     address = db.Column(db.String)
     NRIC = db.Column(db.String)
 
-class client(db.Model):
+class Client(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     userid = db.Column(db.Integer)
     bankerid = db.Column(db.Integer)
     portfolioid = db.Column(db.Integer)
 
-class banker(db.Model):
+class Banker(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     userid = db.Column(db.Integer)
     portfolioid = db.Column(db.Integer)
     clientid = db.Column(db.Integer)
 
-class portfolio(db.Model):
+class Portfolio(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     portfoliotype = db.Column(db.String(60))
     risk = db.Column(db.Integer)
@@ -39,7 +39,7 @@ class portfolio(db.Model):
     description =  db.Column(db.String(240))
     assettype = db.Column(db.String(60))
     
-class financialdec(db.Model):
+class Financialdec(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     clientid = db.Column(db.Integer)
     investmentgoal = db.Column(db.String(120))
