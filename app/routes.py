@@ -10,7 +10,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
 from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm)
-from app.models import (User)
+from app.models import (User, client, banker, financialdec)
 import stripe
 
 
@@ -40,10 +40,14 @@ def client():
         user = User(username=clientregister_form.username.data, nric=clientregister_form.nric.data, password=hashed_password,email=clientregister_form.email.data,banker=0)
         db.session.add(user)
         db.session.commit()
+        db.session.refresh(user)
+        newclient = client(userid=user.id)
+        db.session.add(newclient)
+        db.session.commit()
         flash("Your account has been created! You are now able to log in", 'success') 
         return redirect('/client#login')
     if clientlogin_form.validate_on_submit():
-        user = User.query.filter_by(username=clientlogin_form.username.data).first()
+        user = User.query.filter_by(email=clientlogin_form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, clientlogin_form.password.data) and user.banker==0:
             login_user(user, remember=clientlogin_form.remember.data)
             next_page = request.args.get('next')
@@ -64,10 +68,14 @@ def banker():
         user = User(username=bankerregister_form.username.data,nric=bankerregister_form.nric.data, password=hashed_password,email=bankerregister_form.email.data,banker=1)
         db.session.add(user)
         db.session.commit()
+        db.session.refresh(user)
+        newbanker = banker(userid=user.id)
+        db.session.add(newbanker)
+        db.session.commit()
         flash("Your account has been created! You are now able to log in", 'success') 
         return redirect('/banker#login')
     if bankerlogin_form.validate_on_submit():
-        user = User.query.filter_by(username=bankerlogin_form.username.data).first()
+        user = User.query.filter_by(email=bankerlogin_form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, bankerlogin_form.password.data) and user.banker==1:
             login_user(user, remember=bankerlogin_form.remember.data)
             next_page = request.args.get('next')
