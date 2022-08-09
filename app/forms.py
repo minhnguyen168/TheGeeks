@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm 
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField, SelectField
-from wtforms.validators import Required, Length, Email, EqualTo, ValidationError
+from wtforms.fields.html5 import DateField
+from wtforms.validators import Required, Length, Email, EqualTo, ValidationError, DataRequired
 from app.models import (User)
 from flask_login import current_user
 
@@ -70,3 +71,9 @@ class BankerLoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
 
     submit = SubmitField('Login') 
+
+
+class NewsFilterForm(FlaskForm):
+    startdate = DateField('Start Date', format='%Y-%m-%d', validators=[DataRequired()])
+    enddate = DateField('End Date', format='%Y-%m-%d', validators=[DataRequired()])
+    submit = SubmitField('Submit')
