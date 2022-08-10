@@ -1,0 +1,333 @@
+{% extends "client_landing.html" %}
+{% block content %}
+  <!-- ***** Main Banner Area Start ***** -->
+  <div class="main-banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 align-bottom">
+          <div class="header-text">
+            <h6>TheGeeks Wealth Management platform</h6>
+            <h1>Realizing the possibility of &amp; your wealth.</h1>
+            <div class="buttons">
+              <div class="border-button">
+                <a href="#one">Explore our services</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 offset-lg-1">
+          <div class="owl-banner owl-carousel">
+            <div class="item">
+              <img src="{{ url_for('static', filename='assets_3/images/banner-01.png')}}" alt="">
+            </div>
+            <div class="item">
+              <img src="{{ url_for('static', filename='assets_3/images/banner-02.png')}}" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ***** Main Banner Area End ***** -->
+
+  <div class="discover-items">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section-heading">
+            <div class="line-dec"></div>
+            <h2>Your Investment <em>Portfolio</em>.</h2>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="item">
+            <div class="row">
+              <div class="col-lg-12">
+                <h4>Total Assets</h4>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <br>
+              <div class="row">
+                <h4><strong>$1,650</strong></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="item">
+            <div class="row">
+              <div class="col-lg-12">
+                <h4>Unrealized Gains</h4>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <br>
+              <div class="row">
+                <h4><strong>$1,020</strong></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="item">
+            <div class="row">
+              <div class="col-lg-12">
+                <h4>YTD Earnings</h4>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <br>
+              <div class="row">
+                <h4><strong>$2,020</strong></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="item">
+            <div class="row">
+              <div class="col-lg-12">
+                <h4>Number of Portfolios</h4>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <br>
+              <div class="row">
+                <h4><strong>5</strong></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 ">
+          <div class="item">
+            <h4>Portfolio Growth Data</h4>
+            <div class="line-dec"></div>
+            <div class="chart-container" style="position: relative; display: inline-block; height:20%; width:100%">
+              <canvas id="portfolioGrowthChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="item">
+            <h4>Asset Allocation by Type</h4>
+            <div class="line-dec"></div>
+            <canvas id="assetByTypeChart"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="item">
+            <h4>Asset Allocation by Sector</h4>
+            <div class="line-dec"></div>
+            <canvas id="assetBySectorChart"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="item">
+            <ul class="list-group">
+              <p id="demo"></p>
+              <li>
+                <span><h4>1.<h6>NFT Top Artist<br><a href="#">8.6 ETH or $12,000</a></h6></h4></span>
+              </li>
+              <!-- <li class="list-group-item">Cras justo odio</li>
+              <li class="list-group-item">Dapibus ac facilisis in</li>
+              <li class="list-group-item">Morbi leo risus</li>
+              <li class="list-group-item">Porta ac consectetur ac</li>
+              <li class="list-group-item">Vestibulum at eros</li> -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+  <!-- Scripts -->
+  <!-- Bootstrap core JavaScript -->
+  <!-- <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script> -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <!-- Charts Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+
+
+    <!-- Date Plugin -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+    
+    <!-- Datasets -->
+    <script>
+
+      const startDate = new Date(2021, 1, 1);
+
+      function getRandomColor() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+
+      const labels = [];
+      const colors = [];
+      for (let i = 0; i < 6; i++) {
+        const date = moment(startDate).add(i, 'days').format('YYYY-MM-DD');
+        labels.push(date.toString());
+        colors.push(getRandomColor())
+      }
+
+      const portfolioData = {
+        labels: labels,
+        datasets: [{
+          label: "Asset Values",
+          data:[1300,1254,2000,2100,1900,2500],
+          borderWidth:1,
+          borderColor: 'green'
+        }]
+      }
+
+      const typeData = {
+        labels: [
+          'Stocks',
+          'Bonds',
+          'Gold'
+        ],
+        datasets: [{
+          label: 'Asset Allocation',
+          data: [330, 45, 15],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+          ],
+          hoverOffset: 4
+        }]
+      };
+
+      const sectorData = {
+        labels: [
+          'Media & Entertainment',
+          'Information Technology Services',
+          'Telecommunication',
+          'Networking & Equipment',
+          'Software'
+        ],
+        datasets: 
+        [{
+          label: 'Assets Allocation',
+          data: [30, 45, 15, 13, 23],
+          backgroundColor: colors,
+          hoverOffset: 4
+        }]
+      };
+
+
+    </script>
+
+
+    <!-- Chart Configurations -->
+    <script>
+      
+      const pChart = new Chart(
+        document.getElementById('portfolioGrowthChart').getContext('2d'),
+        {
+          type: 'line',
+          data: portfolioData,
+          options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'timeseries',
+                }
+            }
+          }
+        }
+      );
+
+      const myChart = new Chart(
+        document.getElementById('assetByTypeChart').getContext('2d'),
+        {
+        type: 'pie',
+        data: typeData,
+        options: {
+          legend: {
+                labels: {
+                    fontColor: "white",
+                    fontSize: 14
+                }
+            },
+        }
+      }
+      );
+
+      const myChart2 = new Chart(
+        document.getElementById('assetBySectorChart').getContext('2d'),
+        {
+        type: 'horizontalBar',
+        data: sectorData,
+        options: {
+          // plugins:{
+          //   colorschemes: {
+          //     scheme: 'brewer.Paired12'
+          //   }
+          // },
+          legend: {
+            display: false
+          },
+          tooltips: {
+              callbacks: {
+                label: function(tooltipItem) {
+                        return tooltipItem.yLabel;
+                }
+              }
+          },
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      fontColor: "white",
+                      fontSize: 14,
+                      stepSize: 1,
+                      beginAtZero: true
+                  }
+              }],
+              xAxes: [{
+                  ticks: {
+                      fontColor: "white",
+                      fontSize: 14,
+                  }
+              }]
+          }
+        }
+        }
+      );
+    </script>
+
+    <script>
+
+      let text = "";
+      
+      for (let i = 0; i < 5; i++) {
+  
+        text += "<li class=\"list-group-item\">" + "Stock " + i + "</li>"
+      }
+      
+      document.getElementById("demo").innerHTML = text;
+
+    </script>
+
+
+    <script src="assets_3/js/isotope.min.js"></script>
+    <script src="assets_3/js/owl-carousel.js"></script>
+    <script src="assets_3/js/wow.js"></script>
+    <script src="assets_3/js/tabs.js"></script>
+    <script src="assets_3/js/popup.js"></script>
+    <script src="assets_3/js/custom.js"></script>
+
+
+{% endblock %}

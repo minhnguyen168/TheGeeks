@@ -129,12 +129,21 @@ def become_a_client():
 def clienthome():
     return render_template('client_mainpage.html')
 
+@app.route('/client/dashboard',methods=['GET', 'POST'])
+# @login_required 
+def clientdashboard():
+    return render_template('client_dashboard.html')
+
 
 @app.route('/banker/home',methods=['GET', 'POST'])
 #@login_required
 def bankerhome():
     return render_template('banker_mainpage.html')
 
+# @app.route('/banker/dashboard',methods=['GET', 'POST'])
+# # @login_required 
+# def clienthome():
+#     return render_template('banker_dashboard.html')
 
 ### Stripe Integration
 @app.route("/checkout", methods=['GET','POST'])
