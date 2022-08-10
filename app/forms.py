@@ -75,4 +75,24 @@ class NewsFilterForm(FlaskForm):
     submit = SubmitField('Submit')
 
 # class FinancialGoalForm(FlaskForm):
+    # investmentgoal = 
+    # yeartorealisegoal = 
+    # endgoal = 
+    # age = 
+    # annualincome = 
+    # estimatednetworth = 
+    # initialamount = 
+    # topupamountmonthly = 
+    # valueofcurrentinvestment = 
+    # currentasset = 
+    # equity = 
+    # fixedincome = 
+    # forexcommodities = 
+    # mutualfund = 
+    # crypto = 
+    # realestate = 
+    # otherinvestment = 
+    # prioritiesofinvestment = 
+    # riskappetite = 
+    # dropvalue = 
     
