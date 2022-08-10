@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>Trade</title>
+		<title>Shop for Portfolio</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{{url_for('static', filename='assets_2/css/main.css')}}" />
@@ -17,22 +17,19 @@
 				<!-- Header -->
 					<header id="header" class="alt">
 
-						<h1>Stock Information</h1>
-						<h6> Data from Yahoo Finance </h6>
+						<h1>Shop for Portfolio</h1>
 
 					</header>
                 {% block content %}
 				<div class=ticker_box>
 				{% for index in range(tickers|length)%}
 					<div class=ticker_inner_box>
-						<!--h3>{{markets[index]}}</h3-->
-						<form action="{{ url_for('show_market_details')}}" method="post">
-       						<!--button class="ticker_button" id="ticker_detail" type="submit" value="{{markets[index]}}">Details</button-->
-							<input class="ticker_button" name="ticker_detail" type="submit" value="{{markets[index]}}"></input>
-     					</form>
+						<h3>{{markets[index]}}</h3>
 						<p>Sector: {{tickers[index].info['sector']}}</p>
 						<p>Current Price: {{tickers[index].info['currentPrice']}}</p>
-
+						<form action="{{ url_for('show_market_details')}}" method="post">
+       						<button class="ticker_button" id="ticker_detail" type="submit" value="{{markets[index]}}">Details</button>
+     					</form>
 					</div>
                 {% endfor %}
 				</div>

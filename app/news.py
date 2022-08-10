@@ -5,7 +5,7 @@ from datetime import date, timedelta, datetime
 from newsapi import NewsApiClient
 from app.models import (Insight)
 from app import db
-from gensim.summarization import summarize
+#from gensim.summarization import summarize
 
 
 class News():
@@ -42,19 +42,19 @@ class News():
         return news_df
     
 
-    def get_news_summary(self, filtered_news_df):
-        news_summary = ""
-        if len(filtered_news_df) > 0:
-            combined_text = '. '.join(map(str, filtered_news_df["news_title"].tolist()))
-            combined_text = combined_text.replace("..", ".")
-            to_replace = ["[…]", "<ol>", "<li>", "</li>", "</ol>", "<ul>", "</ul>", "..."]
-            for text in to_replace:
-                combined_text = combined_text.replace(text, "")
-            try:
-                if len(filtered_news_df) > 15:
-                    news_summary = summarize(combined_text, word_count=200)
-                else:
-                    news_summary = summarize(combined_text, ratio=0.2)
-            except:
-                news_summary = ""
-        return news_summary
+    # def get_news_summary(self, filtered_news_df):
+    #     news_summary = ""
+    #     if len(filtered_news_df) > 0:
+    #         combined_text = '. '.join(map(str, filtered_news_df["news_title"].tolist()))
+    #         combined_text = combined_text.replace("..", ".")
+    #         to_replace = ["[…]", "<ol>", "<li>", "</li>", "</ol>", "<ul>", "</ul>", "..."]
+    #         for text in to_replace:
+    #             combined_text = combined_text.replace(text, "")
+    #         try:
+    #             if len(filtered_news_df) > 15:
+    #                 news_summary = summarize(combined_text, word_count=200)
+    #             else:
+    #                 news_summary = summarize(combined_text, ratio=0.2)
+    #         except:
+    #             news_summary = ""
+    #     return news_summary
