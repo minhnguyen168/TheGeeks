@@ -65,6 +65,15 @@ class Financialdec(db.Model):
     dropvalue = db.Column(db.String(120))
 
 
+class Insight(db.Model):
+    news_id = db.Column(db.String(500), primary_key = True)
+    published_date = db.Column(db.Integer)
+    news_title = db.Column(db.String(500))
+    news_description = db.Column(db.String(500))
+    news_content = db.Column(db.String(500))
+    news_url = db.Column(db.String(500))
+
+
     #def get_reset_token(self, expires_sec=1800):
     #    s = Serializer(app.config['SECRET_KEY'], expires_sec)
     #    return s.dumps({'user_id': self.id}).decode('utf-8')
