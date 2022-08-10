@@ -1,15 +1,10 @@
 import os
-from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
-from app.news import (News)
 
-sched = BackgroundScheduler(daemon=True)
-sched.add_job(News().get_financial_news,'interval',hours=24)
-sched.start()
 
 app = Flask(__name__)
 
