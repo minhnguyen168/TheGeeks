@@ -12,6 +12,7 @@ from flask_sqlalchemy import Pagination
 from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm)
 from app.models import (User, Client, Banker, FinancialGoal, Portfolio)
 from app.news import (News)
+from app import trade
 import stripe
 import pandas as pd
 import os
@@ -221,5 +222,25 @@ def news_banker():
             # images_list.append([index+1, "images/wordcloud_{}.jpg".format(index+1)])
         except:
             continue
-    print(images_list)
     return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form, images_list=images_list)
+
+@app.route('/client/trade', methods=['GET', 'POST'])
+def show_markets():
+    markets = ['NVDA', 'BBBY', 'GME', 'NVAX', 'MU', 'INTC', 'LMND', 'NCLH', 'VRNA', 'AMAT', 'U', 'NLSN']
+
+    tickers = trade.get_market_details(markets)
+
+    return render_template('trade.html', tickers=tickers, markets=markets)
+
+@app.route('/client/trade/details', methods=['GET','POST'])
+def show_market_detail():
+    # market = request.form['ticker_form']
+    # print(market)
+    market = 'NVAX'
+    ticker = trade.get_market_details([market])
+    ticker_info = ticker[0].info # since we are only focused on one
+    today = trade.get_today()
+    periods = trade.get_holding_periods(today)
+    hist_df = trade.get_hist_ret(market, periods, today)
+    hist_ret = trade.cal_port_ret(len(periods), hist_df)
+    return render_template('trade_details.html', market=market, ticker_info=ticker_info, hist_ret=hist_ret)
