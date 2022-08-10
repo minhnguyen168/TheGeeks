@@ -181,13 +181,14 @@ def logoutbanker():
 
 @app.route('/client/news', methods=['GET', 'POST']) 
 def news(): 
+    news_obj = News()
+    news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
+    news_summary = news_obj.get_news_summary(news_df)
+    
     news_form = NewsFilterForm()
     if news_form.validate_on_submit():
-        start_date = news_form.startdate.data
-        end_date = news_form.enddate.data
-        print(start_date, end_date)
-    news_obj = News()
-    # news_df = news_obj.get_financial_news()
-    #news_list = news_df['News_Title'].tolist()
-    news_df = pd.DataFrame(columns=['News_ID', 'Published_Date', 'News_Title', 'News_Description', 'News_Content', 'News_URL'])
-    return render_template('news.html', news_df=news_df, news_form=news_form)
+        start_date = int(str(news_form.startdate.data).replace("-", ""))
+        end_date = int(str(news_form.enddate.data).replace("-", ""))
+        news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
+        news_summary = news_obj.get_news_summary(news_df)
+    return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form)
