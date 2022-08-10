@@ -10,7 +10,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
 from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm)
-from app.models import (User, Client, Banker, Financialdec, Portfolio)
+from app.models import (User, Client, Banker, FinancialGoal, Portfolio)
 from app.news import (News)
 import stripe
 import pandas as pd
@@ -126,11 +126,15 @@ def banker_login():
 def become_a_client():
     return render_template('become_a_client.html')
 
-@app.route('/client/home',methods=['GET', 'POST'])
+#Build portfolio page
+@app.route('/banker/build_portfolio',methods=['GET', 'POST'])
 # @login_required 
+def build_portfolio():
+    return render_template('banker_build_portfolio.html')
+
+@app.route('/client/home',methods=['GET', 'POST'])
 def clienthome():
     return render_template('client_mainpage.html')
-
 
 @app.route('/banker/home',methods=['GET', 'POST'])
 #@login_required
