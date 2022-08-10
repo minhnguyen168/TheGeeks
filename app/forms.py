@@ -7,6 +7,7 @@ from app.models import (User)
 from flask_login import current_user
 
 
+
 class ClientRegistrationForm(FlaskForm):
     name =  StringField("Name", validators=[InputRequired(), Length(min=2, max=20)])
     #name =  StringField("Name", validators=[Required(), Length(min=1, max=40)]) 
