@@ -21,10 +21,14 @@
 
                 <ul class=flashes>
                 {% for index, news in news_df.iterrows()%}
-                <li><a href="{{news['News_URL']}}">{{ news["News_Title"] }}</a></li>
+                <li><a href="{{news['news_url']}}">{{ news["news_title"] }}</a></li>
                 {% endfor %}
                 </ul>
 
+                {% if news_summary != "" %}
+                <h3>News Summary:</h3>
+                <p>{{ news_summary }}</p>
+                {% endif %}
 
             <!-- Footer -->
                 <footer id="footer">
