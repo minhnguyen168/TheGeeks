@@ -87,7 +87,6 @@ class FinancialGoal(db.Model):
     initialamount = db.Column(db.Integer)
     topupamountmonthly = db.Column(db.Integer)
     valueofcurrentinvestment = db.Column(db.Integer)
-    currentasset = db.Column(db.Integer)
     equity = db.Column(db.Integer)
     fixedincome = db.Column(db.Integer)
     forexcommodities = db.Column(db.Integer)
