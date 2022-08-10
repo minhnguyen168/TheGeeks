@@ -10,7 +10,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
 from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm)
-from app.models import (User, Client, Banker, Financialdec, Portfolio)
+from app.models import (User, Client, Banker, FinancialGoal, Portfolio)
 from app.news import (News)
 import stripe
 import pandas as pd
