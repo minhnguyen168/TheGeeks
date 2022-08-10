@@ -73,3 +73,6 @@ class NewsFilterForm(FlaskForm):
     startdate = DateField('Start Date', format='%Y-%m-%d', validators=[DataRequired()])
     enddate = DateField('End Date', format='%Y-%m-%d', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+# class FinancialGoalForm(FlaskForm):
+    
