@@ -2,5 +2,4 @@ TheGeeks/
 app/__pycache__/
 app/site.db
 app/site.db-journal
-*.db
 

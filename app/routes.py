@@ -13,6 +13,7 @@ from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrati
 from app.models import (User, Client, Banker, Financialdec, Portfolio)
 from app.news import (News)
 import stripe
+import pandas as pd
 
 
 stripe_keys = {
@@ -182,6 +183,7 @@ def news():
         end_date = news_form.enddate.data
         print(start_date, end_date)
     news_obj = News()
-    news_df = news_obj.get_financial_news()
+    # news_df = news_obj.get_financial_news()
     #news_list = news_df['News_Title'].tolist()
+    news_df = pd.DataFrame(columns=['News_ID', 'Published_Date', 'News_Title', 'News_Description', 'News_Content', 'News_URL'])
     return render_template('news.html', news_df=news_df, news_form=news_form)
