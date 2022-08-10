@@ -2,21 +2,14 @@
 
 <html>
 	<head>
-		<title>TheGeeks Client Wealth Management</title>
+		<title>Trade</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="{{url_for('static', filename='assets/css/main.css')}}" />
+		<link rel="stylesheet" href="{{url_for('static', filename='assets_2/css/main.css')}}" />
 		<noscript><link rel="stylesheet" href="{{url_for('static', filename='assets/css/noscript.css')}}" /></noscript>
 	</head>
 	<body class="is-preload">
-		<!-- Nav -->
-		<nav id="nav">
-			<ul class="container">
-				<li><a href="{{url_for('clienthome')}}">Home</a></li>
-				<li><a href="{{url_for('clienthome')}}">Profile</a></li>
-				<li><a href="{{url_for('logoutclient')}}">Logout</a></li>
-			</ul>
-		</nav>
+
 
 		<!-- Wrapper -->
 			<div id="wrapper">
@@ -24,18 +17,35 @@
 				<!-- Header -->
 					<header id="header" class="alt">
 
+						<h1>{{market}}</h1>
 
-					{% with messages = get_flashed_messages() %}
-					{% if messages %}
-						<ul class=flashes>
-						{% for message in messages %}
-						<li>{{ message }}</li>
-						{% endfor %}
-						</ul>
-					{% endif %}
-					{% endwith %}
 					</header>
-                {% block content %}{% endblock %}
+                {% block content %}
+
+				<h3>Detailed Information</h3>
+				<p>Sector: {{ticker_info['sector']}}</p>
+				<p>Business Summary: {{ticker_info['longBusinessSummary']}}</p>
+    			<p>Current Price: {{ticker_info['currentPrice']}}</p>
+    			<p>Return on Assets: {{ticker_info['returnOnAssets']}}</p>
+
+				<h3>Historical returns for different holding periods</h3>
+				<table>
+					<tr>
+						<th>One week return</th>
+						<th>One month return</th>
+						<th>One year return</th>
+						<th>Five years return</th>
+					</tr>
+					<tr>
+						<td>{{hist_ret[0]}}</td>
+						<td>{{hist_ret[1]}}</td>
+						<td>{{hist_ret[2]}}</td>
+						<td>{{hist_ret[3]}}</td>
+					</tr>
+
+				</table>
+
+				{% endblock %}
 
 
 
