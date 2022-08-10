@@ -1,0 +1,58 @@
+{% extends "landinglayout.html" %}
+
+{% block content %}
+
+
+<!-- Main -->
+	<div id="main">
+
+		<!-- Login -->
+		<article id="login">
+			<h2 class="major">Login</h2>
+			<form method="POST" action="">
+				{{ bankerlogin_form.hidden_tag() }}
+				<div class="fields">
+
+					<div class="field half">
+						{{ bankerlogin_form.email.label(class="form-control-label") }}
+						{% if bankerlogin_form.email.errors %}  
+							{{ bankerlogin_form.email(class="form-control form-control-lg is-invalid") }}
+							<div class="invalid-feedback">
+								{% for error in bankerlogin_form.email.errors %}
+									<span>{{ error }}</span> 
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ bankerlogin_form.email(class="form-control form-control-lg") }}
+						{% endif %}
+					</div>
+					<br>
+					<div class="field half">
+						{{ bankerlogin_form.password.label(class="form-control-label") }}
+				{% if bankerlogin_form.password.errors %}  
+					{{ bankerlogin_form.password(class="form-control form-control-lg is-invalid") }}
+					<div class="invalid-feedback">
+						{% for error in bankerlogin_form.password.errors %}
+							<span>{{ error }}</span> 
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ bankerlogin_form.password(class="form-control form-control-lg") }}
+				{% endif %}
+					</div>
+				</div>
+				<div>
+					{{ bankerlogin_form.remember(class="form-check-input") }}
+					{{ bankerlogin_form.remember.label(class="form-check-label") }}
+				</div>
+				<br>
+				<ul class="actions">
+					<li>{{ bankerlogin_form.submit(class="btn btn-outline-info") }}</li>
+					<li><a href="#forgot" class="button">Forget Password</a></li>
+				</ul>
+			</form>
+			
+		</article>
+
+		
+{% endblock %}

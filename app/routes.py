@@ -26,9 +26,11 @@ def unauthorized_callback():
     return redirect('/')
 
 @app.route('/',methods=['GET', 'POST'])
-def landing():
-    return render_template('index.html')
-
+def mainpage():
+    return render_template('mainpage.html')
+@app.route('/element',methods=['GET', 'POST'])
+def element():
+    return render_template('elements.html')
 @app.route('/client',methods=['GET', 'POST'])
 def client():
     if current_user.is_authenticated: 
@@ -57,6 +59,21 @@ def client():
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('client.html',clientregister_form=clientregister_form, clientlogin_form=clientlogin_form)
 
+@app.route('/client_login',methods=['GET', 'POST'])
+def client_login():
+    if current_user.is_authenticated: 
+        return redirect(url_for('clienthome'))
+    clientlogin_form=ClientLoginForm()
+    if clientlogin_form.validate_on_submit():
+        user = User.query.filter_by(email=clientlogin_form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, clientlogin_form.password.data) and user.banker==0:
+            login_user(user, remember=clientlogin_form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(url_for('clienthome'))
+        else:
+            flash('Login Unsuccessful. Please check username and password', 'danger')
+    return render_template('client_login.html',clientlogin_form=clientlogin_form)
+
 @app.route('/banker',methods=['GET', 'POST'])
 def banker():
     if current_user.is_authenticated: 
@@ -84,11 +101,32 @@ def banker():
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('banker.html',bankerregister_form=bankerregister_form, bankerlogin_form=bankerlogin_form)
+#Banker login
+@app.route('/banker_login',methods=['GET', 'POST'])
+def banker_login():
+    if current_user.is_authenticated: 
+        return redirect(url_for('bankerhome'))
+    bankerregister_form = BankerRegistrationForm()
+    bankerlogin_form=BankerLoginForm()
+    if bankerlogin_form.validate_on_submit():
+        user = User.query.filter_by(email=bankerlogin_form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, bankerlogin_form.password.data) and user.banker==1:
+            login_user(user, remember=bankerlogin_form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(url_for('bankerhome'))
+        else:
+            flash('Login Unsuccessful. Please check username and password', 'danger')
+    return render_template('banker_login.html', bankerlogin_form=bankerlogin_form)
+
+#Become a client page
+@app.route('/become_a_client',methods=['GET', 'POST'])
+def become_a_client():
+    return render_template('become_a_client.html')
 
 @app.route('/client/home',methods=['GET', 'POST'])
-@login_required 
+# @login_required 
 def clienthome():
-    return render_template('clientlanding.html')
+    return render_template('client_mainpage.html')
 
 
 @app.route('/banker/home',methods=['GET', 'POST'])
