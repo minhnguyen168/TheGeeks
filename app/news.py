@@ -1,11 +1,35 @@
 import pandas as pd
 import uuid
 import re
+import os
 from datetime import date, timedelta, datetime
-from newsapi import NewsApiClient
 from app.models import (Insight)
 from app import db
+
+# News API and Summarisation
+from newsapi import NewsApiClient
 from gensim.summarization import summarize
+
+# LDA Model
+import gensim
+import gensim.corpora as corpora
+from gensim.utils import simple_preprocess
+from gensim.parsing.preprocessing import STOPWORDS
+from gensim.models import CoherenceModel
+
+# Stop words
+import nltk
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
+# Wordcloud for topic modelling
+from matplotlib import pyplot as plt
+from wordcloud import WordCloud, STOPWORDS
+import matplotlib.colors as mcolors
+
 
 
 class News():
@@ -58,3 +82,66 @@ class News():
             except:
                 news_summary = ""
         return news_summary
+
+    def remove_stopwords(self, text, stopwords_list, lemma):
+        string = ""
+        # Remove meaningless words for LDA
+        # Common terms can also be removed
+        common_terms = ["business", "finance", "financial", "investment", "planning"]
+        text = simple_preprocess(str(text), deacc=True)
+        for word in text.split():
+            if word not in stopwords_list and word not in common_terms:
+                string+=lemma.lemmatize(word)+" "
+        return string
+
+    def topic_modelling(self, news_df, num_topics):
+        lemma=WordNetLemmatizer()
+        # Remove meaningless words and common terms before LDA
+        stopwords_list=stopwords.words('english')
+        common_terms = [
+            "business", "finance", "financial", "investment", "planning", "li", "latest",
+            "best", "year", "inc", "today", "july", "pm"]
+        stopwords_list.extend(common_terms)
+
+        news_words_list = []
+        for index, row in news_df.iterrows():
+            string = ""
+            words_list = simple_preprocess(str(row["news_description"]), deacc=True)
+            for word in words_list:
+                if word not in stopwords_list and word not in common_terms:
+                    string += lemma.lemmatize(word) + " " 
+            words_list = string.split()
+            news_words_list.append(words_list)
+        id2word = corpora.Dictionary(news_words_list)
+        corpus = [id2word.doc2bow(x) for x in news_words_list]
+
+        lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
+                                           id2word=id2word,
+                                           num_topics=num_topics, 
+                                           random_state=100,
+                                           update_every=1,
+                                           chunksize=100,
+                                           passes=10,
+                                           alpha='symmetric',
+                                           iterations=100,
+                                           per_word_topics=True)
+
+        topics = lda_model.show_topics(formatted=False)
+        return topics
+    
+    def topics_wordcloud(self, topics):
+        cols = [color for name, color in mcolors.TABLEAU_COLORS.items()]
+        for i, topic in enumerate(topics, start=1):
+            wc = WordCloud(stopwords=set(STOPWORDS),
+                            background_color='white',
+                            width=2500,
+                            height=1800,
+                            max_words=10,
+                            colormap='tab10',
+                            color_func=lambda *args, **kwargs: cols[i],
+                            prefer_horizontal=1.0)
+            topic_words = dict(topics[i-1][1])
+            wc.generate_from_frequencies(topic_words, max_font_size=300)
+            img_folder_path = os.path.join('app', 'static', 'images')
+            wc.to_file(os.path.join(img_folder_path, "wordcloud_{}.jpg".format(i)))
+            

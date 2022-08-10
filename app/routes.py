@@ -14,6 +14,8 @@ from app.models import (User, Client, Banker, Financialdec, Portfolio)
 from app.news import (News)
 import stripe
 import pandas as pd
+import os
+
 
 
 stripe_keys = {
@@ -176,7 +178,7 @@ def logoutbanker():
     return redirect(url_for('banker'))
 
 @app.route('/client/news', methods=['GET', 'POST']) 
-def news(): 
+def news_client(): 
     news_obj = News()
     news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
     news_summary = news_obj.get_news_summary(news_df)
@@ -187,4 +189,33 @@ def news():
         end_date = int(str(news_form.enddate.data).replace("-", ""))
         news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
         news_summary = news_obj.get_news_summary(news_df)
-    return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form)
+    
+    images_list=[] # To be removed and so the next line images_list
+    return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form, images_list=images_list)
+
+@app.route('/banker/news', methods=['GET', 'POST']) 
+def news_banker(): 
+    news_obj = News()
+    news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
+    news_summary = news_obj.get_news_summary(news_df)
+    
+    news_form = NewsFilterForm()
+    if news_form.validate_on_submit():
+        start_date = int(str(news_form.startdate.data).replace("-", ""))
+        end_date = int(str(news_form.enddate.data).replace("-", ""))
+        news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
+        news_summary = news_obj.get_news_summary(news_df)
+
+    # All below to be moved to dashboard page
+    num_topics = 4
+    images_list = []
+    topics = news_obj.topic_modelling(news_df, num_topics)
+    news_obj.topics_wordcloud(topics)
+    for index in range(num_topics):
+        try:
+            images_list.append([index+1, os.path.join("app/static/images", "wordcloud_{}.jpg".format(index+1))])
+            # images_list.append([index+1, "images/wordcloud_{}.jpg".format(index+1)])
+        except:
+            continue
+    print(images_list)
+    return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form, images_list=images_list)

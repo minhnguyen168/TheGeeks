@@ -30,6 +30,12 @@
                 <p>{{ news_summary }}</p>
                 {% endif %}
 
+
+				{% for index, wordcloud in images_list %}
+				<p>{{wordcloud}}</p>
+				<h3>Topic {{index}}: </h3><img src="{{wordcloud}}" height="240px" width="300px">
+				{% endfor %}
+
             <!-- Footer -->
                 <footer id="footer">
                     <p class="copyright">&copy; TheGeeks.</p>
