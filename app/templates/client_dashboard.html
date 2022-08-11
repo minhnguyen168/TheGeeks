@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 {% extends "client_landing.html" %}
 
 {% block content %}
@@ -115,27 +118,40 @@
             <h4>Asset Allocation by Type</h4>
             <div class="line-dec"></div>
             <canvas id="assetByTypeChart"></canvas>
+            <div>
+              <!-- <canvas id="line-chart"></canvas> -->
+              <span id="demo"></span>
+            </div>
           </div>
         </div>
-
-        <div class="col-lg-12">
+      
+        <div class="col-lg-6">
           <div class="item">
+            <h4>Stock Performance (Previous day)</h4>
+            <div class="line-dec"></div>
             <ul class="list-group">
-              <p id="demo"></p>
-              <li>
-                <span><h4>1.<h6>NFT Top Artist<br><a href="#">8.6 ETH or $12,000</a></h6></h4></span>
-              </li>
-              <!-- <li class="list-group-item">Cras justo odio</li>
-              <li class="list-group-item">Dapibus ac facilisis in</li>
-              <li class="list-group-item">Morbi leo risus</li>
-              <li class="list-group-item">Porta ac consectetur ac</li>
-              <li class="list-group-item">Vestibulum at eros</li> -->
+              <table class="table" style="background-color: white; padding: 10px;">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Percentage Change</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for i in range(markets | length)%}
+                <tr>
+                  <th scope="row">{{i+1}}</th>
+                  <td>{{markets[i]}}</td>
+                  <td>{{marketChange[i]}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+              </table>
             </ul>
           </div>
         </div>
       </div>
-
-
 
   <!-- Scripts -->
   <!-- Bootstrap core JavaScript -->
@@ -160,8 +176,6 @@
     <!-- Datasets -->
     <script type="text/javascript">
        
-       
-  
       const startDate = new Date(2021, 1, 1);
 
       function getRandomColor() {
@@ -185,7 +199,7 @@
         labels: labels,
         datasets: [{
           label: "Asset Values",
-          data:[1300,1254,2000,2100,1900,2500],
+          data:[1370,1254,2000,2100,1900,2500],
           borderWidth:1,
           borderColor: 'green'
         }]
@@ -219,7 +233,12 @@
             scales: {
                 x: {
                     type: 'timeseries',
-                }
+                },
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
             }
           }
         }
@@ -241,19 +260,6 @@
       }
       );
 
-      let text = "";
-
-      for (let i = 0; i < "{{portfolios|length}}"; i++) {
-
-        var p = "{{portfolios[0]}}"
-  
-        text += "<li class=\"list-group-item\">" + "Stock" + p + "</li>"
-      }
-  
-
-      document.getElementById("demo").innerHTML = text;
-
-     
     </script>
 
 

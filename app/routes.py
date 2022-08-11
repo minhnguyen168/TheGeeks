@@ -1,3 +1,4 @@
+from re import A
 from flask_login.mixins import UserMixin
 from app import app, db, bcrypt, login_manager
 from flask import render_template
@@ -6,12 +7,13 @@ from flask import flash
 from flask import redirect
 from flask import request, abort
 from flask import jsonify
+from flask import json
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
 from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm)
 from app.models import (User, Client, Banker, FinancialGoal, Portfolio, client_portfolio)
-from app.news import (News)
+# from app.news import (News)
 from app import trade
 import stripe
 import pandas as pd
@@ -147,12 +149,45 @@ def clientdashboard():
     user = User.query.filter_by(id=current_user.get_id()).first()
     client_id  = Client.query.filter_by(userid=current_user.get_id()).first().client_id
 
-    portfolio_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id=' + str(client_id), db.session.bind)
-    totalAssets = portfolio_df.amount_purchase.sum()
+    client_portfolio_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id=' + str(client_id), db.session.bind)
+    totalAssets = client_portfolio_df.amount_purchase.sum()
 
-    # portfolios = client_portfolio.query.filter_by(client_id=client_id).all()
+    portfolioIDs = client_portfolio_df["portfolio_id"].unique()
+    
+    assets = []
+    
+    # types = {}
 
-    return render_template('client_dashboard.html', portfolios=portfolio_df, totalAssets=totalAssets)
+    for p in portfolioIDs:
+
+        statement = 'SELECT * FROM Portfolio P WHERE  P.portfolio_id=' + str(p)
+        row = pd.read_sql(statement , db.session.bind)
+
+        for i in range(1, 11):
+            assets.append(row["asset"+str(i)][0])
+            atype = row["asset"+str(i)+"_type"]
+            # if atype in types:
+            #     types[atype] += 1
+            # else:
+            #     types[atype] = 1
+
+    # print(types)
+
+    market_name = list(set(assets))
+    today = trade.get_today()
+    start = trade.get_one_day_period(today)
+    percentageRecord = []
+
+    for m in market_name:
+        perc = round(trade.cal_1d_diff(m, start, today),2)
+        percentageRecord.append(perc)
+
+    dates = json.dumps(client_portfolio_df["date_purchase"].to_list())
+    values = json.dumps(client_portfolio_df["amount_purchase"].to_list())
+
+    return render_template('client_dashboard.html', portfolios=client_portfolio_df, 
+    totalAssets=totalAssets, markets=market_name, marketChange=percentageRecord,
+    dates=dates, values=values)
 
 @app.route('/banker/home',methods=['GET', 'POST'])
 #@login_required
@@ -208,45 +243,45 @@ def logoutbanker():
     logout_user()
     return redirect(url_for('banker'))
 
-@app.route('/client/news', methods=['GET', 'POST']) 
-def news_client(): 
-     news_obj = News()
-     images_list = []
-     news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
-     # news_summary = news_obj.get_news_summary(news_df)
-     news_form = NewsFilterForm()
-     if news_form.validate_on_submit():
-         start_date = int(str(news_form.startdate.data).replace("-", ""))
-         end_date = int(str(news_form.enddate.data).replace("-", ""))
-         news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
-         # news_summary = news_obj.get_news_summary(news_df)
-     return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
+# @app.route('/client/news', methods=['GET', 'POST']) 
+# def news_client(): 
+#      news_obj = News()
+#      images_list = []
+#      news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
+#      # news_summary = news_obj.get_news_summary(news_df)
+#      news_form = NewsFilterForm()
+#      if news_form.validate_on_submit():
+#          start_date = int(str(news_form.startdate.data).replace("-", ""))
+#          end_date = int(str(news_form.enddate.data).replace("-", ""))
+#          news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
+#          # news_summary = news_obj.get_news_summary(news_df)
+#      return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
 
-@app.route('/banker/news', methods=['GET', 'POST'])
-def news_banker():
-    news_obj = News()
-    news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
-    #news_summary = news_obj.get_news_summary(news_df)
+# @app.route('/banker/news', methods=['GET', 'POST'])
+# def news_banker():
+#     news_obj = News()
+#     news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
+#     #news_summary = news_obj.get_news_summary(news_df)
 
-    news_form = NewsFilterForm()
-    if news_form.validate_on_submit():
-        start_date = int(str(news_form.startdate.data).replace("-", ""))
-        end_date = int(str(news_form.enddate.data).replace("-", ""))
-        news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
-        #news_summary = news_obj.get_news_summary(news_df)
+#     news_form = NewsFilterForm()
+#     if news_form.validate_on_submit():
+#         start_date = int(str(news_form.startdate.data).replace("-", ""))
+#         end_date = int(str(news_form.enddate.data).replace("-", ""))
+#         news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
+#         #news_summary = news_obj.get_news_summary(news_df)
 
-    # All below to be moved to dashboard page
-    num_topics = 4
-    images_list = []
-    topics = news_obj.topic_modelling(news_df, num_topics)
-    news_obj.topics_wordcloud(topics)
-    for index in range(num_topics):
-        try:
-            images_list.append([index+1, os.path.join("app/static/images", "wordcloud_{}.jpg".format(index+1))])
-            # images_list.append([index+1, "images/wordcloud_{}.jpg".format(index+1)])
-        except:
-            continue
-    return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
+#     # All below to be moved to dashboard page
+#     num_topics = 4
+#     images_list = []
+#     topics = news_obj.topic_modelling(news_df, num_topics)
+#     news_obj.topics_wordcloud(topics)
+#     for index in range(num_topics):
+#         try:
+#             images_list.append([index+1, os.path.join("app/static/images", "wordcloud_{}.jpg".format(index+1))])
+#             # images_list.append([index+1, "images/wordcloud_{}.jpg".format(index+1)])
+#         except:
+#             continue
+#     return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
 
 @app.route('/client/trade', methods=['GET', 'POST'])
 def show_markets():
