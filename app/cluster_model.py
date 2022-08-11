@@ -4,6 +4,7 @@ import pandas as pd
 import datetime
 import matplotlib
 from datetime import datetime
+from datetime import date
 from matplotlib import colors
 import plotly.express as px
 import seaborn as sns
@@ -17,7 +18,6 @@ from matplotlib.colors import ListedColormap
 from sklearn import metrics
 import warnings
 import sys
-from datetime import date
 from app import db
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
@@ -29,9 +29,10 @@ np.random.seed(42)
 #         for indiv in result:
 #             resulttemp.append(indiv)
 #         resultslist.append(resulttemp)
-class clustering:
-    def AC_cluster(df):
+class clustering():
+    def AC_cluster(self, df):
         def age(birthdate):
+            matplotlib.pyplot.switch_backend('Agg') 
             today = date.today()
             hi = today.year - datetime.strptime(birthdate, '%Y/%m/%d').year - ((today.month, today.day) < (datetime.strptime(birthdate, '%Y/%m/%d').month, datetime.strptime(birthdate, '%Y/%m/%d').day))
             return hi
@@ -54,7 +55,6 @@ class clustering:
         from yellowbrick.cluster import KElbowVisualizer
         Elbow_M = KElbowVisualizer(KMeans(), k=10)
         Elbow_M.fit(PCA_df)
-        Elbow_M.show()
         k_value=Elbow_M.elbow_value_
         #Initiating the Agglomerative Clustering model 
         AC = AgglomerativeClustering(n_clusters=k_value)
