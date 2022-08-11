@@ -1081,6 +1081,15 @@ Create NFT Style
   right: 5px;
   top: 5%;
 }
+.create-nft .buttons {
+  margin-top: 30px;
+  display: flex;
+  justify-content: start;
+}
+
+.create-nft .border-button {
+  margin-right: 15px;
+}
 
 .create-nft .second-item .number {
   position: absolute;
@@ -1469,6 +1478,15 @@ Explore Style
   background-size: cover;
   padding: 200px 0px 120px 0px;
   position: relative;
+}
+.discover-items .section-heading .buttons {
+  margin-top: 30px;
+  display: flex;
+  justify-content: start;
+}
+
+.discover-items .section-heading .border-button {
+  margin-right: 15px;
 }
 
 .discover-items .section-heading {

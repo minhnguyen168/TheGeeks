@@ -45,17 +45,16 @@
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-                    <a href="{{url_for('clienthome')}}" class="logo">
+                    <a href="{{url_for('clientdashboard')}}" class="logo">
                         <img src="{{ url_for('static', filename='assets_3/images/logo.png')}}" alt="">
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                        <li><a href="index.html">Investment Oppoortunities</a></li>
                         <li><a href="{{url_for('news_client')}}">Insights</a></li>
                         <li><a href="{{url_for('become_a_client')}}">Connect</a></li>
-                        <li><a href="/client_login#login">Academy</a></li>
-                        <li><a href="/banker_login#login">Investment Goals</a></li>
+                        <li><a href="{{url_for('client_academy')}}">Academy</a></li>
+                        <li><a href="{{url_for('fingoals')}}">Investment Goals</a></li>
                     </ul>   
                     <a class='menu-trigger'>
                         <span>Menu</span>

@@ -18,8 +18,12 @@
                         <div class="row">
                           <div class="col-lg-12">
                               <p>Client name:{{ nam['name'][0] }}</p>
-                              <p>Estimated Networth: {{ result.iloc[index,4] }}</p>
-                              <a href="details.html">View Details</a>
+                              <p>Investment Goal: {{ result.iloc[index,0] }}</p>
+                              <p>Years to Realize Goal: {{ result.iloc[index,1] }}</p>
+                              <p>End Goal: ${{ result.iloc[index,2] }}</p>
+                              <p>Annual Income: ${{ result.iloc[index,3] }}</p>
+                              <p>Estimated Networth: ${{ result.iloc[index,4] }}</p>
+                              <a href="{{url_for('bankerclientdetails')}}">View Details</a>
                             </div>
                           </div>
                         </div>

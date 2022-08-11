@@ -56,18 +56,15 @@
                         <div class="dropdown-content">
                           <a href="{{url_for('banker_view_client')}}">View Your Client</a>
                           <a href="{{url_for('client_segmentation')}}">Customer Segmentation</a>
-                          <a href="#">Potential Clients</a>
                         </div>
                       </div>
-                        <li><a href="explore.html">Insights</a></li>
-                        <li><a href="/client_login#login">Academy</a></li>
-                        <li><a href="/banker_login#login">Connect</a></li>
+                        <li><a href="{{url_for('news_banker')}}">Insights</a></li>
+                        <li><a href="{{url_for('banker_academy')}}">Academy</a></li>
+                        <li><a href="/banker_login#login">My schedule</a></li>
                       <div class="dropdown">
                         <button class="dropbtn">Portfolio</button>
                         <div class="dropdown-content">
                           <a href="{{url_for('build_portfolio')}}">Build a portfolio</a>
-                          <a href="#">Link 2</a>
-                          <a href="#">Link 3</a>
                         </div>
                       </div>
                     </ul>   
@@ -95,23 +92,21 @@
 
 
     <!-- Footer -->
-      <footer id="footer">
-        <p class="copyright">&copy; TheGeeks.</p>
-      </footer>
 
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <p>The Geeks</p>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
   
 
 
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <p>The Geeks</p>
-        </div>
-      </div>
-    </div>
-  </footer>
+  
 
 
   <!-- Scripts -->

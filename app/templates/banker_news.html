@@ -1,0 +1,39 @@
+{% extends "banker_landing.html" %}
+
+{% block content %}
+<div class="item-details-page">
+	<div class="container">
+		<div class="row">
+		<!-- Wrapper -->
+			<div id="wrapper">
+				<h1>News Resources</h1>
+                <form action="" method='POST' name="newsform">
+                    {{ news_form.csrt_token }}
+                    <p>{{ news_form.startdate.label }} {{news_form.startdate(class='datepicker')}} {{news_form.hidden_tag()}}</p>
+                    <p>{{ news_form.enddate.label }} {{news_form.enddate(class='datepicker')}} {{news_form.hidden_tag()}}</p>
+                    <p>{{news_form.submit()}}</p>
+                </form>
+
+                {% if news_summary != "" %}
+				<br>
+				<br>
+                <h3>News Summary:</h3>
+                <p>{{ news_summary }}</p>
+                {% endif %}
+
+                {% for index, news in news_df.iterrows()%}
+                <div>
+                    <form action="{{url_for('news_client')}}" method="post">
+                        <p>{{ news['news_title'] }}</p>
+                        <button type="submit" name="news_id" value="{{ news['news_id'] }}">View More</button>
+                     </form>
+                </div>
+                {% endfor %}
+	
+			</div>	
+		</div>		
+	</div>			
+</div>
+
+
+{% endblock %}

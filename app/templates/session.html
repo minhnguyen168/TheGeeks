@@ -1,19 +1,23 @@
-<!DOCTYPE html>
-  <html lang="en">
+{% extends "banker_landing.html" %}
+
+{% block content %}
   <head>
     <title>Flask_Chat_App</title>
   </head>
   <body>
-
+  <div class="create-nft">
+    <div class ="container">
+    <br>
     <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
     <div class="message_holder"></div>
-
     <form action="" method="POST">
       <input type="hidden" class="username" value="{{current_user.name}}"/>
       <input type="text" class="message" placeholder="Messages"/>
       <input type="submit"/>
     </form>
-
+  
+  </div>
+  </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
@@ -45,4 +49,4 @@
     </script>
 
   </body>
-  </html>
+{% endblock %}
