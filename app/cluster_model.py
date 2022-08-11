@@ -30,9 +30,7 @@ np.random.seed(42)
 #             resulttemp.append(indiv)
 #         resultslist.append(resulttemp)
 class clustering:
-    def AC_cluster:
-        df=db.session.execute('SELECT c.client_id, u.dateofbirth, u.city, f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue FROM User u, Client c, FinancialGoal f WHERE u.banker=0 AND u.id =c.userid AND c.client_id=f.client_id')
-        df=pd.DataFrame(df)
+    def AC_cluster(df):
         def age(birthdate):
             today = date.today()
             hi = today.year - datetime.strptime(birthdate, '%Y/%m/%d').year - ((today.month, today.day) < (datetime.strptime(birthdate, '%Y/%m/%d').month, datetime.strptime(birthdate, '%Y/%m/%d').day))
@@ -64,7 +62,14 @@ class clustering:
         AC_df = AC.fit_predict(PCA_df)
         PCA_df["Clusters"] = AC_df
         #Adding the Clusters feature to the orignal dataframe.
-        df["Clusters"]= AC_df
+        df["Clusters_AC"]= AC_df
+        attributes=['annualincome','estimatednetworth','endgoal','valueofcurrentinvestment','age']
+        for i in attributes:
+            plt.figure()
+            pl=sns.swarmplot(x=df['Clusters_AC'], y=df[i], color= "#CBEDDD", alpha=0.5 )
+            pl=sns.boxenplot(x=df['Clusters_AC'], y=df[i])
+            plt.savefig(f'app/static/images/AC_cluster_{i}.png')
+        return df
 
 
     

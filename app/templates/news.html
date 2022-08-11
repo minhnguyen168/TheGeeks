@@ -14,7 +14,6 @@
                     <p>{{ news_form.enddate.label }} {{news_form.enddate(class='datepicker')}} {{news_form.hidden_tag()}}</p>
                     <p>{{news_form.submit()}}</p>
                 </form>
-
                 <ul class=flashes>
                 {% for index, news in news_df.iterrows()%}
                 <li><a href="{{news['news_url']}}">{{ news["news_title"] }}</a></li>
@@ -22,6 +21,8 @@
                 </ul>
 
                 {% if news_summary != "" %}
+				<br>
+				<br>
                 <h3>News Summary:</h3>
                 <p>{{ news_summary }}</p>
                 {% endif %}
