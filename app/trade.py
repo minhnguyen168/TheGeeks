@@ -30,10 +30,9 @@ def get_holding_periods(end):
     return [wk_1, mth_1, yr_1, yr_5]
 
 def get_one_day_period(end):
-    one_day_before = end - timedelta(days=1)
     day_before_ytd = end - timedelta(days=2)
 
-    return [one_day_before, day_before_ytd]
+    return day_before_ytd
 
 
 # calculate asset returns for a current portfolio? e.g. assuming client selected NVDA stocks only (should we do this for assets they want to buy or their entire portfolio)
@@ -54,11 +53,10 @@ def cal_port_ret(num_periods, hist_df):
 
     return portfolio_means
 
-def cal_1d_diff(hist_df):
-    # adj_close = hist_df['Adj Close']
-    # return adj_close.pct_change()[1]  # get percentage change between the days -> remove first entry because NA
-    adj_close = hist_df['Date', 'Adj Close']
-    print(adj_close)
+def cal_1d_diff(market_name, start, end):
+    hist_df = yf.download(market_name, start=start, end=end)
+    adj_close = hist_df['Adj Close']
+    return adj_close.pct_change()[-1]  # get percentage change between the day before ytd and ytd
 
 # main
 
@@ -68,9 +66,13 @@ def cal_1d_diff(hist_df):
 #            'IS', 'CARG', 'TTWO', 'DVN', 'MRSN'
 #            ]
 
-# Branda
-# today = trade.get_today()
-# periods = trade.get_one_day_period(today)
-# hist_df = trade.get_hist_ret(market_name, periods, end) # should have two records
-# pct_diff = trade.cal_1d_diff(hist_df)
+# to add in routes.py
+# @app.route('/client/returns_test', methods=['GET', 'POST'])
+# def get_1d_diff():
+#     market_name = 'NVDA'
+#     today = trade.get_today()
+#     start = trade.get_one_day_period(today)
+#     print(trade.cal_1d_diff(market_name, start, today)) # should have two records
+#     return render_template()
+
 
