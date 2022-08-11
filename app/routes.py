@@ -2,7 +2,7 @@ from flask_login.mixins import UserMixin
 from app import app, db, bcrypt, login_manager
 from flask import render_template
 from flask import url_for 
-from flask import flash 
+from flask import flash
 from flask import redirect
 from flask import request, abort
 from flask import jsonify
@@ -10,8 +10,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
 from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm)
-from app.models import (User, Client, Banker, FinancialGoal, Portfolio)
-from app.news import (News)
+from app.models import (User, Client, Banker, FinancialGoal, Portfolio, client_portfolio)
+# from app.news import (News)
 from app import trade
 import stripe
 import pandas as pd
@@ -139,11 +139,30 @@ def build_portfolio():
 def clienthome():
     return render_template('client_mainpage.html')
 
+@app.route('/client/dashboard',methods=['GET', 'POST'])
+# @login_required 
+def clientdashboard():
+
+    user = User.query.filter_by(id=current_user.get_id()).first()
+    client_id  = Client.query.filter_by(userid=current_user.get_id()).first().client_id
+    portfolios = client_portfolio.query.filter_by(client_id=client_id).all()
+
+    return render_template('client_dashboard.html', portfolios=portfolios)
+
 @app.route('/banker/home',methods=['GET', 'POST'])
 #@login_required
 def bankerhome():
     return render_template('banker_mainpage.html')
 
+@app.route('/banker/dashboard',methods=['GET', 'POST'])
+# @login_required 
+def bankerdashboard():
+    return render_template('banker_dashboard.html')
+
+@app.route('/banker/dashboard/clientDetails',methods=['GET', 'POST'])
+# @login_required 
+def bankerclientdetails():
+    return render_template('banker_client_details.html')
 
 ### Stripe Integration
 @app.route("/checkout", methods=['GET','POST'])
@@ -184,42 +203,18 @@ def logoutbanker():
     logout_user()
     return redirect(url_for('banker'))
 
-@app.route('/client/news', methods=['GET', 'POST']) 
-def news(): 
-    news_obj = News()
-    news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
-    news_summary = news_obj.get_news_summary(news_df)
-    news_form = NewsFilterForm()
-    if news_form.validate_on_submit():
-        start_date = int(str(news_form.startdate.data).replace("-", ""))
-        end_date = int(str(news_form.enddate.data).replace("-", ""))
-        news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
-        news_summary = news_obj.get_news_summary(news_df)
-    return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form)
-
-# @app.route('/client/news', methods=['GET', 'POST'])
-# def news():
+# @app.route('/client/news', methods=['GET', 'POST']) 
+# def news(): 
 #     news_obj = News()
 #     news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
 #     news_summary = news_obj.get_news_summary(news_df)
-#
 #     news_form = NewsFilterForm()
 #     if news_form.validate_on_submit():
-# <<<<<<< Updated upstream
 #         start_date = int(str(news_form.startdate.data).replace("-", ""))
 #         end_date = int(str(news_form.enddate.data).replace("-", ""))
 #         news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
 #         news_summary = news_obj.get_news_summary(news_df)
 #     return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form)
-# =======
-#         start_date = news_form.startdate.data
-#         end_date = news_form.enddate.data
-#         print(start_date, end_date)
-#     news_obj = News()
-#     # news_df = news_obj.get_financial_news()
-#     #news_list = news_df['News_Title'].tolist()
-#     news_df = pd.DataFrame(columns=['News_ID', 'Published_Date', 'News_Title', 'News_Description', 'News_Content', 'News_URL'])
-#     return render_template('news.html', news_df=news_df, news_form=news_form)
 
 @app.route('/client/trade', methods=['GET', 'POST'])
 def show_markets():
@@ -248,3 +243,4 @@ def show_market_details():
 #
 #
 #     return render_template('shopPortfolio.html')
+

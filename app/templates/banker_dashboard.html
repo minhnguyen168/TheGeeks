@@ -1,0 +1,171 @@
+{% extends "banker_landing.html" %}
+
+{% block content %}
+
+<script>
+  var arr = ["a","b","c"]
+</script>
+
+
+
+ <!-- ***** Main Banner Area Start ***** -->
+ <div class="main-banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 align-bottom">
+          <div class="header-text">
+            <h6>TheGeeks Wealth Management platform</h6>
+            <h1>Realizing the possibility of &amp; your wealth.</h1>
+            <div class="buttons">
+              <div class="border-button">
+                <a href="#one">Explore our services</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ***** Main Banner Area End ***** -->
+
+  <div class="discover-items">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="section-heading">
+            <div class="line-dec"></div>
+            <h2>Know your <em>Clients</em>.</h2>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="item">
+            <div class="row">
+              <div class="col-lg-12">
+                <h4># of Clients</h4>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <br>
+              <div class="row">
+                <h4><strong>15</strong></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="item">
+            <div class="row">
+              <div class="col-lg-12">
+                <h4>Managing Portfolios</h4>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <br>
+              <div class="row">
+                <h4><strong>6</strong></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="item">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h4># of meetings today</h4>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <br>
+                <div class="row">
+                  <h4><strong>2</strong></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="item">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h4>My Clients</h4>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <br>
+                <div class="row">
+                    <div class="list-group">
+                        <button type="button" class="list-group-item d-flex justify-content-between align-items-center active" href="/banker/dashboard/Dennis" onclick="yourFunction('1')">
+                          Dennis Lew
+                          <span class="badge badge-primary badge-pill" style="color: blue;">14</span>
+                        </button>
+                        <button type="button" class="list-group-item d-flex justify-content-between align-items-center" disabled>
+                          Sarah Koshy
+                        </button>
+                        <button type="button" class="list-group-item d-flex justify-content-between align-items-center" disabled>
+                          Michelle Tan                         
+                        </button>
+                        <button type="button" class="list-group-item d-flex justify-content-between align-items-center" disabled>
+                          Avery Cal                         
+                        </button>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="item">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h4>My Portfolios</h4>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <br>
+                <div class="row">
+                  <div class="list-group">
+                    <button type="button" class="list-group-item d-flex justify-content-between align-items-center active">
+                      Portfolio A
+                    </button>
+                    <button type="button" class="list-group-item d-flex justify-content-between align-itehoms-center" disabled>
+                      Portfolio B                        
+                    </button>
+                    <button type="button" class="list-group-item d-flex justify-content-between align-items-center" disabled>
+                      Portfolio C                        
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="item">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h4>List of Meetings</h4>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <br>
+                <div class="row">
+                  <div class="list-group">
+                    <button type="button" class="list-group-item d-flex justify-content-between align-items-center active">
+                      Dennis Lew
+                    </button>
+                    <button type="button" class="list-group-item d-flex justify-content-between align-items-center" disabled>
+                      Sarah Koshy
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+  <script type="text/javascript">
+
+    function yourFunction(intValue){
+       alert(intValue);
+    }
+
+  </script>
+
+{% endblock %}

@@ -73,7 +73,6 @@ class Portfolio(db.Model):
     asset10 = db.Column(db.String(60))
     asset10_percentage = db.Column(db.Integer)
     asset10_type = db.Column(db.String(60))
-
     
 class FinancialGoal(db.Model):
     goal_id = db.Column(db.Integer, primary_key = True)
@@ -98,6 +97,13 @@ class FinancialGoal(db.Model):
     riskappetite = db.Column(db.Integer)
     dropvalue = db.Column(db.String(120))
 
+## Added by Branda
+class client_portfolio(db.Model):
+    client_id = db.Column(db.Integer)
+    portfolio_id = db.Column(db.Integer)
+    purchase_id = db.Column(db.Integer, primary_key = True)
+    date_purchase = db.Column(db.String)
+    amount_purchase = db.Column(db.Integer)
 
 class Insight(db.Model):
     news_id = db.Column(db.String(500), primary_key = True)
