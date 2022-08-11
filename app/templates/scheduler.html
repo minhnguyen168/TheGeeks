@@ -1,10 +1,4 @@
-{% extends "banker_landing.html" %}
-
-{% block content %}
-<div class="create-nft">
-<div class="container">
 <article id="register">
-    <br>
     <h2 class="major">Register</h2>
     <form method="POST" action="">
         {{ scheduler_form.hidden_tag() }}
@@ -66,13 +60,10 @@
                 {% endif %}
             </div>
         </div>
-        <br>
         <ul class="actions">
             {{ scheduler_form.submit(class="btn btn-outline-info") }}
         </ul>
     </form>
-</article>
-</div>
-</div>
 
-{% endblock %}
+    <a href="{{url_for('bankerdashboard')}}">Go Home</a>
+</article>
