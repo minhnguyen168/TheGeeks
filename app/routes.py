@@ -86,7 +86,7 @@ def banker():
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('banker.html',bankerregister_form=bankerregister_form, bankerlogin_form=bankerlogin_form)
 #Banker login
-@app.route('/banker_login/',methods=['GET', 'POST'])
+@app.route('/banker_login',methods=['GET', 'POST'])
 def banker_login():
     if current_user.is_authenticated: 
         return redirect(url_for('bankerhome'))
@@ -168,7 +168,17 @@ def build_portfolio():
 @app.route('/banker/viewclients',methods=['GET', 'POST'])
 # @login_required 
 def banker_view_client():
-    return render_template('banker_view_client.html')
+    a=current_user.id
+    client=db.session.execute('SELECT DISTINCT c.client_id FROM User u, Banker b, BankerClientRelation r, Client c WHERE u.id ='+ current_user.get_id() +' AND u.banker=1 AND b.userid=u.id AND r.banker_id=b.banker_id AND r.client_id= c.client_id')
+    client=pd.DataFrame(client)
+    name= db.session.execute('SELECT u.name FROM Client c, User u WHERE c.client_id='+ str(client.iloc[0,0]) + ' AND c.userid=u.id')
+    result=db.session.execute('SELECT f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue  FROM Client c, FinancialGoal f WHERE c.client_id=' + str(client.iloc[0,0]) +  ' AND c.client_id=f.client_id')
+    for i in range(1,client_id.shape[0]):
+        holder1=db.session.execute('SELECT f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue  FROM Client c, FinancialGoal f WHERE c.client_id=' + str(client.iloc[i,0]) +  ' AND c.client_id=f.client_id')
+        holder2=db.session.execute('SELECT u.name FROM Client c, User u WHERE c.client_id='+ str(client.iloc[0,0]) + ' AND c.userid=u.id')
+        name=name.append(holder2)
+        result=result.append(holder1)
+    return render_template('banker_view_client.html',result=result,name=name)
 
 @app.route('/client/home',methods=['GET', 'POST'])
 def clienthome():
@@ -303,6 +313,7 @@ def logoutbanker():
 @app.route('/client/news', methods=['GET', 'POST']) 
 def news_client(): 
      news_obj = News()
+     images_list = []
      news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
      news_summary = news_obj.get_news_summary(news_df)
      news_form = NewsFilterForm()
@@ -311,37 +322,33 @@ def news_client():
          end_date = int(str(news_form.enddate.data).replace("-", ""))
          news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
          news_summary = news_obj.get_news_summary(news_df)
+     return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form, images_list=images_list)
 
-     if request.method == "POST":
-        news_id = request.form.get('news_id')
-        client_id = current_user.get_id()
-        if client_id is not None:
-            news_record_df = pd.read_sql('SELECT * FROM NewsRecord', db.session.bind)
-            record_id = news_record_df.shape[0]+1
-            db.session.execute('INSERT INTO NewsRecord (record_id, client_id, news_id) VALUES ({}, {}, "{}")'.format(record_id, client_id, news_id))
-            db.session.commit()
-            news_url_df = pd.read_sql('SELECT news_url FROM Insight WHERE news_id = "{}"'.format(news_id), db.session.bind)
-            if news_url_df.shape[0] > 0:
-                news_url = news_url_df.iloc[0]['news_url']
-                return redirect(news_url)
+# @app.route('/banker/news', methods=['GET', 'POST'])
+# def news_banker():
+#     news_obj = News()
+#     news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
+#     #news_summary = news_obj.get_news_summary(news_df)
 
-     return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form)
+#     news_form = NewsFilterForm()
+#     if news_form.validate_on_submit():
+#         start_date = int(str(news_form.startdate.data).replace("-", ""))
+#         end_date = int(str(news_form.enddate.data).replace("-", ""))
+#         news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
+#         #news_summary = news_obj.get_news_summary(news_df)
 
-
-@app.route('/banker/news', methods=['GET', 'POST'])
-def news_banker():
-    news_obj = News()
-    news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
-    news_summary = news_obj.get_news_summary(news_df)
-
-    news_form = NewsFilterForm()
-    if news_form.validate_on_submit():
-        start_date = int(str(news_form.startdate.data).replace("-", ""))
-        end_date = int(str(news_form.enddate.data).replace("-", ""))
-        news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
-        news_summary = news_obj.get_news_summary(news_df)
-
-    return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form)
+#     # All below to be moved to dashboard page
+#     num_topics = 4
+#     images_list = []
+#     topics = news_obj.topic_modelling(news_df, num_topics)
+#     news_obj.topics_wordcloud(topics)
+#     for index in range(num_topics):
+#         try:
+#             images_list.append([index+1, os.path.join("app/static/images", "wordcloud_{}.jpg".format(index+1))])
+#             # images_list.append([index+1, "images/wordcloud_{}.jpg".format(index+1)])
+#         except:
+#             continue
+#     return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
 
 @app.route('/client/trade', methods=['GET', 'POST'])
 def show_markets():
