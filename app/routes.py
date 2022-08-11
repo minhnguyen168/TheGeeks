@@ -435,15 +435,22 @@ def show_market_details():
 
 @app.route('/client/portfolio', methods=['GET', 'POST'])
 def shop_portfolio():
-    df = db.session.execute('SELECT * FROM Portfolio')
+    user = User.query.filter_by(id=current_user.get_id()).first()
+    client_id = Client.query.filter_by(userid=current_user.get_id()).first().client_id
+
+    client_portfolios_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id =' + str(client_id),
+                                       db.session.bind)
+
+    portfolioIDs = client_portfolios_df.portfolio_id.unique()
+
+    #print(portfolioIDs) # in an array
+    df = db.session.execute('SELECT * FROM Portfolio where portfolio_id NOT IN (%s)' % tuple(portfolioIDs))
     df = pd.DataFrame(df)
-    print(df)
-    return render_template('shopPortfolio.html', df=df)
+
+    return render_template('shopPortfolio.html', df=df, port_id=portfolioIDs)
 
 @app.route('/client/portfolio_details', methods=['GET', 'POST'])
 def show_port_details():
-    # user = User.query.filter_by(id=current_user.get_id()).first()
-    # client_id = Client.query.filter_by(userid=current_user.get_id()).first().client_id
     #
     # ## Calculating Statistics
     # client_portfolios_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id =' + str(client_id),
