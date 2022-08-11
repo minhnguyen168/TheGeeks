@@ -1,3 +1,4 @@
+from re import A
 from flask_login.mixins import UserMixin
 from app import app, db, bcrypt, login_manager
 from flask import render_template
@@ -6,6 +7,7 @@ from flask import flash
 from flask import redirect
 from flask import request, abort
 from flask import jsonify
+from flask import json
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
@@ -170,9 +172,35 @@ def clienthome():
 def clientdashboard():
     user = User.query.filter_by(id=current_user.get_id()).first()
     client_id  = Client.query.filter_by(userid=current_user.get_id()).first().client_id
-    portfolios = client_portfolio.query.filter_by(client_id=client_id).all()
 
-    return render_template('client_dashboard.html', portfolios=portfolios)
+    ## Calculating Statistics
+    client_portfolios_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id =' + str(client_id), db.session.bind)
+    totalAssets = client_portfolios_df.amount_purchase.sum()
+    portfolioIDs = client_portfolios_df.portfolio_id.unique()
+    totalPortfolios = len(portfolioIDs)
+
+    market_names = []
+
+    for p in portfolioIDs:
+        row  = pd.read_sql('SELECT * FROM Portfolio p WHERE p.portfolio_id =' + str(p), db.session.bind)
+
+        for i in range(1,11):
+            market = row["asset"+str(i)][0]
+            market_names.append(market)
+
+    market_names = list(set(market_names))
+    
+    today = trade.get_today()
+    start = trade.get_one_day_period(today)
+
+    marketChange = []
+
+    for m in market_names:
+        marketChange.append(round(trade.cal_1d_diff(m, start, today),2)) # should have two records
+
+
+    return render_template('client_dashboard.html', totalAssets=totalAssets, totalPortfolios=totalPortfolios,
+        markets=market_names, marketChange=marketChange)
 
 @app.route('/banker/home',methods=['GET', 'POST'])
 #@login_required
@@ -203,6 +231,7 @@ def client_segmentation():
         db.session.commit()
         db.session.refresh(cluster)
     return render_template('customer_segmentation.html',df=df)
+
 ### Stripe Integration
 @app.route("/checkout", methods=['GET','POST'])
 @login_required
@@ -256,31 +285,31 @@ def news_client():
          news_summary = news_obj.get_news_summary(news_df)
      return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form, images_list=images_list)
 
-@app.route('/banker/news', methods=['GET', 'POST'])
-def news_banker():
-    news_obj = News()
-    news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
-    #news_summary = news_obj.get_news_summary(news_df)
+# @app.route('/banker/news', methods=['GET', 'POST'])
+# def news_banker():
+#     news_obj = News()
+#     news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
+#     #news_summary = news_obj.get_news_summary(news_df)
 
-    news_form = NewsFilterForm()
-    if news_form.validate_on_submit():
-        start_date = int(str(news_form.startdate.data).replace("-", ""))
-        end_date = int(str(news_form.enddate.data).replace("-", ""))
-        news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
-        #news_summary = news_obj.get_news_summary(news_df)
+#     news_form = NewsFilterForm()
+#     if news_form.validate_on_submit():
+#         start_date = int(str(news_form.startdate.data).replace("-", ""))
+#         end_date = int(str(news_form.enddate.data).replace("-", ""))
+#         news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
+#         #news_summary = news_obj.get_news_summary(news_df)
 
-    # All below to be moved to dashboard page
-    num_topics = 4
-    images_list = []
-    topics = news_obj.topic_modelling(news_df, num_topics)
-    news_obj.topics_wordcloud(topics)
-    for index in range(num_topics):
-        try:
-            images_list.append([index+1, os.path.join("app/static/images", "wordcloud_{}.jpg".format(index+1))])
-            # images_list.append([index+1, "images/wordcloud_{}.jpg".format(index+1)])
-        except:
-            continue
-    return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
+#     # All below to be moved to dashboard page
+#     num_topics = 4
+#     images_list = []
+#     topics = news_obj.topic_modelling(news_df, num_topics)
+#     news_obj.topics_wordcloud(topics)
+#     for index in range(num_topics):
+#         try:
+#             images_list.append([index+1, os.path.join("app/static/images", "wordcloud_{}.jpg".format(index+1))])
+#             # images_list.append([index+1, "images/wordcloud_{}.jpg".format(index+1)])
+#         except:
+#             continue
+#     return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
 
 @app.route('/client/trade', methods=['GET', 'POST'])
 def show_markets():
