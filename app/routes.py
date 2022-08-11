@@ -145,9 +145,13 @@ def clientdashboard():
 
     user = User.query.filter_by(id=current_user.get_id()).first()
     client_id  = Client.query.filter_by(userid=current_user.get_id()).first().client_id
-    portfolios = client_portfolio.query.filter_by(client_id=client_id).all()
 
-    return render_template('client_dashboard.html', portfolios=portfolios)
+    portfolio_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id=' + str(client_id), db.session.bind)
+    totalAssets = portfolio_df.amount_purchase.sum()
+
+    # portfolios = client_portfolio.query.filter_by(client_id=client_id).all()
+
+    return render_template('client_dashboard.html', portfolios=portfolio_df, totalAssets=totalAssets)
 
 @app.route('/banker/home',methods=['GET', 'POST'])
 #@login_required

@@ -51,7 +51,7 @@
             <div class="col-lg-12">
               <br>
               <div class="row">
-                <h4><strong>${{ portfolios | sum(attribute='amount_purchase') }}</strong></h4>
+                <h4>${{totalAssets}}</h4>
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@
             <div class="col-lg-12">
               <br>
               <div class="row">
-                <h4><strong>{{ portfolios | length }}</strong></h4>
+                <h4>{{portfolios | length}}</h4>
               </div>
             </div>
           </div>
@@ -117,13 +117,7 @@
             <canvas id="assetByTypeChart"></canvas>
           </div>
         </div>
-        <div class="col-lg-6">
-          <div class="item">
-            <h4>Asset Allocation by Sector</h4>
-            <div class="line-dec"></div>
-            <canvas id="assetBySectorChart"></canvas>
-          </div>
-        </div>
+
         <div class="col-lg-12">
           <div class="item">
             <ul class="list-group">
@@ -214,24 +208,6 @@
           hoverOffset: 4
         }]
       };
-
-      const sectorData = {
-        labels: [
-          'Media & Entertainment',
-          'Information Technology Services',
-          'Telecommunication',
-          'Networking & Equipment',
-          'Software'
-        ],
-        datasets: 
-        [{
-          label: 'Assets Allocation',
-          data: [30, 45, 15, 13, 23],
-          backgroundColor: colors,
-          hoverOffset: 4
-        }]
-      };
-
       
       const pChart = new Chart(
         document.getElementById('portfolioGrowthChart').getContext('2d'),
@@ -263,47 +239,6 @@
             },
         }
       }
-      );
-
-      const myChart2 = new Chart(
-        document.getElementById('assetBySectorChart').getContext('2d'),
-        {
-        type: 'horizontalBar',
-        data: sectorData,
-        options: {
-          // plugins:{
-          //   colorschemes: {
-          //     scheme: 'brewer.Paired12'
-          //   }
-          // },
-          legend: {
-            display: false
-          },
-          tooltips: {
-              callbacks: {
-                label: function(tooltipItem) {
-                        return tooltipItem.yLabel;
-                }
-              }
-          },
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      fontColor: "white",
-                      fontSize: 14,
-                      stepSize: 1,
-                      beginAtZero: true
-                  }
-              }],
-              xAxes: [{
-                  ticks: {
-                      fontColor: "white",
-                      fontSize: 14,
-                  }
-              }]
-          }
-        }
-        }
       );
 
       let text = "";
