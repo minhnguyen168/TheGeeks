@@ -1,0 +1,266 @@
+<article id="register">
+    <h2 class="major">Register</h2>
+    <form method="POST" action="">
+        {{ financialgoal_form.hidden_tag() }}
+        <div class="fields">
+            <div class="field half">
+                {{ financialgoal_form.investmentgoal.label(class="form-control-label") }}
+
+                {% if financialgoal_form.investmentgoal.errors %}  
+                    {{ financialgoal_form.investmentgoal(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.investmentgoal.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.investmentgoal(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.yeartorealisegoal.label(class="form-control-label") }}
+
+                {% if financialgoal_form.yeartorealisegoal.errors %}  
+                    {{ financialgoal_form.yeartorealisegoal(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.yeartorealisegoal.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.yeartorealisegoal(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.endgoal.label(class="form-control-label") }}
+
+                {% if financialgoal_form.endgoal.errors %}  
+                    {{ financialgoal_form.endgoal(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.endgoal.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.endgoal(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="field half">
+                {{ financialgoal_form.annualincome.label(class="form-control-label") }}
+
+                {% if financialgoal_form.annualincome.errors %}  
+                    {{ financialgoal_form.annualincome(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.annualincome.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.annualincome(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.estimatednetworth.label(class="form-control-label") }}
+
+                {% if financialgoal_form.estimatednetworth.errors %}  
+                    {{ financialgoal_form.estimatednetworth(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.estimatednetworth.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.estimatednetworth(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.initialamount.label(class="form-control-label") }}
+
+                {% if financialgoal_form.initialamount.errors %}  
+                    {{ financialgoal_form.initialamount(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.initialamount.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.initialamount(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.topupamountmonthly.label(class="form-control-label") }}
+
+                {% if financialgoal_form.topupamountmonthly.errors %}  
+                    {{ financialgoal_form.topupamountmonthly(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.topupamountmonthly.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.topupamountmonthly(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.valueofcurrentinvestment.label(class="form-control-label") }}
+
+                {% if financialgoal_form.valueofcurrentinvestment.errors %}  
+                    {{ financialgoal_form.valueofcurrentinvestment(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.valueofcurrentinvestment.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.valueofcurrentinvestment(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.equity.label(class="form-control-label") }}
+
+                {% if financialgoal_form.equity.errors %}  
+                    {{ financialgoal_form.equity(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.equity.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.equity(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.fixedincome.label(class="form-control-label") }}
+
+                {% if financialgoal_form.fixedincome.errors %}  
+                    {{ financialgoal_form.fixedincome(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.fixedincome.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.fixedincome(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.forexcommodities.label(class="form-control-label") }}
+
+                {% if financialgoal_form.forexcommodities.errors %}  
+                    {{ financialgoal_form.forexcommodities(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.forexcommodities.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.forexcommodities(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.mutualfund.label(class="form-control-label") }}
+
+                {% if financialgoal_form.mutualfund.errors %}  
+                    {{ financialgoal_form.mutualfund(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.mutualfund.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.mutualfund(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.crypto.label(class="form-control-label") }}
+
+                {% if financialgoal_form.crypto.errors %}  
+                    {{ financialgoal_form.crypto(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.crypto.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.crypto(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.realestate.label(class="form-control-label") }}
+
+                {% if financialgoal_form.realestate.errors %}  
+                    {{ financialgoal_form.realestate(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.realestate.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.realestate(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.otherinvestment.label(class="form-control-label") }}
+
+                {% if financialgoal_form.otherinvestment.errors %}  
+                    {{ financialgoal_form.otherinvestment(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.otherinvestment.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.otherinvestment(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.prioritiesofinvestment.label(class="form-control-label") }}
+
+                {% if financialgoal_form.prioritiesofinvestment.errors %}  
+                    {{ financialgoal_form.prioritiesofinvestment(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.prioritiesofinvestment.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.prioritiesofinvestment(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.riskappetite.label(class="form-control-label") }}
+
+                {% if financialgoal_form.riskappetite.errors %}  
+                    {{ financialgoal_form.riskappetite(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.riskappetite.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.riskappetite(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ financialgoal_form.dropvalue.label(class="form-control-label") }}
+
+                {% if financialgoal_form.dropvalue.errors %}  
+                    {{ financialgoal_form.dropvalue(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in financialgoal_form.dropvalue.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ financialgoal_form.dropvalue(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            
+        </div>
+        <ul class="actions">
+            {{ financialgoal_form.submit(class="btn btn-outline-info") }}
+        </ul>
+    </form>
+</article>

@@ -9,7 +9,7 @@ from flask import jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
-from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm)
+from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm, FinancialGoalForm)
 from app.models import (User, Client, Banker, FinancialGoal, Portfolio, client_portfolio)
 from app.news import (News)
 from app import trade
@@ -116,6 +116,43 @@ def become_a_client():
         db.session.commit()
         flash("Your account has been created! You are now able to log in", 'success') 
     return render_template('become_a_client.html',clientregister_form=clientregister_form)
+
+@app.route('/client/financialgoals',methods=['GET', 'POST'])
+@login_required 
+def fingoals():
+    financialgoal_form=FinancialGoalForm()
+    if financialgoal_form.validate_on_submit():
+        client=Client.query.filter_by(userid=current_user.id).first()
+        fingoal = FinancialGoal(
+            client_id = client.client_id,
+            investmentgoal = financialgoal_form.investmentgoal.data,
+            yeartorealisegoal = financialgoal_form.yeartorealisegoal.data,
+            endgoal = financialgoal_form.endgoal.data,
+            annualincome = financialgoal_form.annualincome.data,
+            estimatednetworth = financialgoal_form.estimatednetworth.data,
+            initialamount = financialgoal_form.initialamount.data,
+            topupamountmonthly = financialgoal_form.topupamountmonthly.data,
+            valueofcurrentinvestment = financialgoal_form.valueofcurrentinvestment.data,
+            equity = financialgoal_form.equity.data,
+            fixedincome = financialgoal_form.fixedincome.data,
+            forexcommodities = financialgoal_form.forexcommodities.data,
+            mutualfund = financialgoal_form.mutualfund.data,
+            crypto = financialgoal_form.crypto.data,
+            realestate = financialgoal_form.realestate.data,
+            otherinvestment = financialgoal_form.otherinvestment.data,
+            prioritiesofinvestment = financialgoal_form.prioritiesofinvestment.data,
+            riskappetite = financialgoal_form.riskappetite.data,
+            dropvalue = financialgoal_form.dropvalue.data
+        )
+        db.session.add(fingoal)
+        db.session.commit()
+        flash('Goals Captured!', 'danger')
+        return redirect(url_for('clientdashboard'))
+        
+    else:
+        flash('Login Unsuccessful. Please check username and password', 'danger')
+
+    return render_template('financial_goals.html',financialgoal_form=financialgoal_form)
 
 #Build portfolio page
 @app.route('/banker/build_portfolio',methods=['GET', 'POST'])
