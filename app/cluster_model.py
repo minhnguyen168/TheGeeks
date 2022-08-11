@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import datetime
 import matplotlib
+from datetime import datetime
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import plotly.express as px
@@ -23,7 +24,7 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
 np.random.seed(42)
 
-# df=db.session.execute('SELECT c.client_id, u.dateofbirth, u.city, f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.age, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue FROM User u, Client c, FinancialGoal f WHERE u.banker=0 AND u.id =c.userid AND c.client_id=f.client_id')
+df=db.session.execute('SELECT c.client_id, u.dateofbirth, u.city, f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.age, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue FROM User u, Client c, FinancialGoal f WHERE u.banker=0 AND u.id =c.userid AND c.client_id=f.client_id')
 # resultslist=[]
 #     for result in df:
 #         resulttemp=[]
@@ -31,9 +32,6 @@ np.random.seed(42)
 #             resulttemp.append(indiv)
 #         resultslist.append(resulttemp)
 
-import sqlite3
-import pandas as pd
-
-cnx = sqlite3.connect('site.db')
-
-df = pd.read_sql_query("SELECT c.client_id, u.dateofbirth, u.city, f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.age, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue FROM User u, Client c, FinancialGoal f WHERE u.banker=0 AND u.id =c.userid AND c.client_id=f.client_id", cnx)
+df=pd.DataFrame(df)
+for n in df.shape[0]:
+    df['dateofbirth']=datetime.strptime(df['dateofbirth'], "%Y-%m-%d")
