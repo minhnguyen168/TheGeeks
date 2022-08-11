@@ -163,6 +163,12 @@ def fingoals():
 def build_portfolio():
     return render_template('banker_build_portfolio.html')
 
+#Build portfolio page
+@app.route('/banker/viewclients',methods=['GET', 'POST'])
+# @login_required 
+def banker_view_client():
+    return render_template('banker_view_client.html')
+
 @app.route('/client/home',methods=['GET', 'POST'])
 def clienthome():
     return render_template('client_mainpage.html')
