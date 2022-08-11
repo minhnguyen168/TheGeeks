@@ -55,9 +55,10 @@ def cal_port_ret(num_periods, hist_df):
     return portfolio_means
 
 def cal_1d_diff(hist_df):
-    adj_close = hist_df['Adj Close']
-    return adj_close.pct_change()[1]  # get percentage change between the days -> remove first entry because NA
-
+    # adj_close = hist_df['Adj Close']
+    # return adj_close.pct_change()[1]  # get percentage change between the days -> remove first entry because NA
+    adj_close = hist_df['Date', 'Adj Close']
+    print(adj_close)
 
 # main
 
@@ -69,7 +70,7 @@ def cal_1d_diff(hist_df):
 
 # Branda
 # today = trade.get_today()
-# periods = trade.get_holding_periods(today)
+# periods = trade.get_one_day_period(today)
 # hist_df = trade.get_hist_ret(market_name, periods, end) # should have two records
 # pct_diff = trade.cal_1d_diff(hist_df)
 
