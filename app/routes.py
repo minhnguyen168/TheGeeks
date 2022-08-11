@@ -12,7 +12,7 @@ from flask import json
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
-from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm, FinancialGoalForm)
+from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm, FinancialGoalForm, SchedulerForm)
 from app.models import (User, Client, Banker, FinancialGoal, Portfolio, client_cluster, client_portfolio)
 from app.news import (News)
 from app import trade
@@ -155,8 +155,24 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
     join_room(room)
     print('received my event: ' + str(json))
     socketio.emit('my response', json, callback=messageReceived, room=room)
-
 #endchat
+
+#Scheduling page
+@app.route('/banker/schedule/<clientid>', methods=['GET', 'POST'])
+@login_required
+def scheduler(clientid):
+    scheduler_form=SchedulerForm()
+    
+    if scheduler_form.validate_on_submit():
+        
+        a=(str(scheduler_form.startdate_field.data).replace("-", ""))
+        b=(str(scheduler_form.starttime_field.data).replace(":", ""))
+        c=(str(scheduler_form.enddate_field.data).replace("-", ""))
+        d=(str(scheduler_form.endtime_field.data).replace(":", ""))
+        return redirect(url_for('calendarapi',clientid=clientid,startYYYYMMDDHHMM=a+b,endYYYYMMDDHHMM=c+d))
+    return render_template('scheduler.html',scheduler_form=scheduler_form)
+
+#
 
 #Calendar invite miniAPI
 @app.route('/banker/schedule/<clientid>/<startYYYYMMDDHHMM>/<endYYYYMMDDHHMM>')
@@ -192,7 +208,10 @@ def calendarapi(clientid,startYYYYMMDDHHMM,endYYYYMMDDHHMM):
     # f = open(os.path.join(directory, str(clientid)+'.ics'), 'wb')
     # f.write(cal.to_ical())
     # f.close()
-    return Response(cal.to_ical(), mimetype='text/calendar')
+    flash('Meeting Scheduled!')
+    
+    headers={'Location' : 'http://ec2-18-141-3-51.ap-southeast-1.compute.amazonaws.com:5000/banker/dashboard'}
+    return Response(cal.to_ical(), mimetype='text/calendar', status=302, headers=headers)
 
 #end calendar invite miniAPI
 

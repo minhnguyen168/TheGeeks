@@ -1,0 +1,67 @@
+<article id="register">
+    <h2 class="major">Register</h2>
+    <form method="POST" action="">
+        {{ scheduler_form.hidden_tag() }}
+        <div class="fields">
+            <div class="field half">
+                {{ scheduler_form.startdate_field.label(class="form-control-label") }}
+
+                {% if scheduler_form.startdate_field.errors %}  
+                    {{ scheduler_form.startdate_field(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in scheduler_form.startdate_field.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ scheduler_form.startdate_field(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="field half">
+                {{ scheduler_form.starttime_field.label(class="form-control-label") }}
+
+                {% if scheduler_form.starttime_field.errors %}  
+                    {{ scheduler_form.starttime_field(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in scheduler_form.starttime_field.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ scheduler_form.starttime_field(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="field">
+                {{ scheduler_form.enddate_field.label(class="form-control-label") }}
+                {% if scheduler_form.enddate_field.errors %}  
+                    {{ scheduler_form.enddate_field(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in scheduler_form.enddate_field.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ scheduler_form.enddate_field(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="field half">
+                {{ scheduler_form.endtime_field.label(class="form-control-label") }}
+                {% if scheduler_form.endtime_field.errors %}  
+                    {{ scheduler_form.endtime_field(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in scheduler_form.endtime_field.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ scheduler_form.endtime_field(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </div>
+        <ul class="actions">
+            {{ scheduler_form.submit(class="btn btn-outline-info") }}
+        </ul>
+    </form>
+</article>
