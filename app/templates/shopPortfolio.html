@@ -22,16 +22,13 @@
 					</header>
                 {% block content %}
 				<div class=ticker_box>
-				{% for index in range(tickers|length)%}
-					<div class=ticker_inner_box>
-						<h3>{{markets[index]}}</h3>
-						<p>Sector: {{tickers[index].info['sector']}}</p>
-						<p>Current Price: {{tickers[index].info['currentPrice']}}</p>
-						<form action="{{ url_for('show_market_details')}}" method="post">
-       						<button class="ticker_button" id="ticker_detail" type="submit" value="{{markets[index]}}">Details</button>
-     					</form>
-					</div>
-                {% endfor %}
+					{{tables}}
+					{{titles}}
+
+					{% for table in tables %}
+					  {{titles[loop.index]}}
+					  {{ table|safe }}
+					{% endfor %}
 				</div>
 
 
