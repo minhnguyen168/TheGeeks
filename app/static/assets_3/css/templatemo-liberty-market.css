@@ -1467,7 +1467,7 @@ Explore Style
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-  padding: 400px 0px 120px 0px;
+  padding: 200px 0px 120px 0px;
   position: relative;
 }
 
@@ -1556,7 +1556,6 @@ Explore Style
   border-radius: 16px;
   left: 50%;
   transform: translateX(-50%);
-  top: -16px;
 }
 
 .discover-items .item span.author {

@@ -200,14 +200,20 @@ def banker_view_client():
     a=current_user.id
     client=db.session.execute('SELECT DISTINCT c.client_id FROM User u, Banker b, BankerClientRelation r, Client c WHERE u.id ='+ current_user.get_id() +' AND u.banker=1 AND b.userid=u.id AND r.banker_id=b.banker_id AND r.client_id= c.client_id')
     client=pd.DataFrame(client)
-    name= db.session.execute('SELECT u.name FROM Client c, User u WHERE c.client_id='+ str(client.iloc[0,0]) + ' AND c.userid=u.id')
+    nam= db.session.execute('SELECT u.name FROM Client c, User u WHERE c.client_id='+ str(client.iloc[0,0]) + ' AND c.userid=u.id')
     result=db.session.execute('SELECT f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue  FROM Client c, FinancialGoal f WHERE c.client_id=' + str(client.iloc[0,0]) +  ' AND c.client_id=f.client_id')
-    for i in range(1,client_id.shape[0]):
+    nam=pd.DataFrame(nam)
+    result=pd.DataFrame(result)
+    for i in range(1,client.shape[0]):
         holder1=db.session.execute('SELECT f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue  FROM Client c, FinancialGoal f WHERE c.client_id=' + str(client.iloc[i,0]) +  ' AND c.client_id=f.client_id')
-        holder2=db.session.execute('SELECT u.name FROM Client c, User u WHERE c.client_id='+ str(client.iloc[0,0]) + ' AND c.userid=u.id')
-        name=name.append(holder2)
+        holder1=pd.DataFrame(holder1)
         result=result.append(holder1)
-    return render_template('banker_view_client.html',result=result,name=name)
+        
+    for i in range(1,nam.shape[0]):  
+        holder2=db.session.execute('SELECT u.name FROM Client c, User u WHERE c.client_id='+ str(client.iloc[i,0]) + ' AND c.userid=u.id')
+        holder2=pd.DataFrame(holder2)
+        nam=nam.append(holder2)
+    return render_template('banker_view_client.html',result=result,nam=nam)
 
 @app.route('/client/home',methods=['GET', 'POST'])
 def clienthome():
