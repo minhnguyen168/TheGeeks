@@ -1,11 +1,13 @@
 {% extends "client_landing.html" %}
 {% block content %}
+<div class="top-seller">
+<div class ="container">
 <article id="register">
     <h2 class="major">Register</h2>
     <form method="POST" action="">
         {{ financialgoal_form.hidden_tag() }}
-        <div class="fields">
-            <div class="field half">
+        <div class="row">
+            <div class="col-lg-4">
                 {{ financialgoal_form.investmentgoal.label(class="form-control-label") }}
 
                 {% if financialgoal_form.investmentgoal.errors %}  
@@ -19,7 +21,7 @@
                     {{ financialgoal_form.investmentgoal(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-            <div class="field half">
+            <div class="col-lg-4">
                 {{ financialgoal_form.yeartorealisegoal.label(class="form-control-label") }}
 
                 {% if financialgoal_form.yeartorealisegoal.errors %}  
@@ -33,7 +35,7 @@
                     {{ financialgoal_form.yeartorealisegoal(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-            <div class="field half">
+            <div class="col-lg-4">
                 {{ financialgoal_form.endgoal.label(class="form-control-label") }}
 
                 {% if financialgoal_form.endgoal.errors %}  
@@ -47,6 +49,7 @@
                     {{ financialgoal_form.endgoal(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
+            <br>
 
             <div class="field half">
                 {{ financialgoal_form.annualincome.label(class="form-control-label") }}
@@ -259,11 +262,13 @@
                 {% endif %}
             </div>
 
-            
+        <br>
         </div>
         <ul class="actions">
             {{ financialgoal_form.submit(class="btn btn-outline-info") }}
         </ul>
     </form>
 </article>
+</div>
+</div>
 {% endblock %}

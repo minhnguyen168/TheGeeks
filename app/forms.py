@@ -106,7 +106,7 @@ class BankerBuildForm(FlaskForm):
     asset10 =  StringField("Asset 10", validators=[InputRequired()]) 
     asset10_percentage =  IntegerField("Percentage of Asset 10", validators=[InputRequired()])
     asset10_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
-
+    submit = SubmitField('Submit')
 
 
 

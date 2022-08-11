@@ -1,143 +1,498 @@
-{% extends "banker_landing.html" %}
-
+{% extends "client_landing.html" %}
 {% block content %}
-  <!-- ***** Header Area End ***** -->
+<div class="top-seller">
+<div class ="container">
+<article id="register">
+    <h2 class="major">Register</h2>
+    <form method="POST" action="">
+        {{ portfoliobuild_form.hidden_tag() }}
+        <div class="row">
+            <div class="col-lg-4">
+                {{ portfoliobuild_form.name.label(class="form-control-label") }}
 
-  <div class="item-details-page">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="section-heading">
-            <div class="line-dec"></div>
-            <h2>Build a Portfolio</h2>
-          </div>
-        </div>
-        <div class="col-lg-12">
-          <form id="contact" action="" method="post">
-            <div class="row">
-              <div class="col-lg-6">
-                <fieldset>
-                  <label for="first_name">Name</label>
-                  <input type="first_name" name="first_name" id="first_name" autocomplete="on" required>
-                </fieldset>
-              </div>
-              <div class="col-lg-12">
-                <fieldset>
-                  <label for="description">Description</label>
-                  <input type="description" name="description" id="description"  autocomplete="on" required>
-                </fieldset>
-              </div>
-              <div class="col-lg-3">
-                <h4>Asset 1</h4>
-              </div>
-              <div class="col-lg-3">
-                <fieldset>
-                  <label for="asset_type">Asset Type</label>
-                  <select name="asset_type" id="asset_type">
-                    <option value="">- -</option>
-                    <option value="1">Bonds</option>
-                    <option value="1">ETF</option>
-                    <option value="1">stock</option>
-                    <option value="1">Reits</option>
-                  </select>
-                </fieldset>
-              </div>
-              <div class="col-lg-3">
-                <fieldset>
-                  <label for="asset_id">Asset ticket symbol</label>
-                  <input type="asset_id" name="asset_id" id="asset_id"  autocomplete="on" required>
-                </fieldset>
-              </div>
-              <div class="col-lg-3">
-                <fieldset>
-                  <label for="asset_id">Percentage of the portfolio</label>
-                  <input type="asset_id" name="asset_id" id="asset_id"  autocomplete="on" required>
-                </fieldset>
-              </div>
-              <div class="col-lg-">
-                <fieldset>
-                  <label for="royalities">Royalties</label>
-                  <input type="royalities" name="royalities" id="royalities" placeholder="Common royalties 1-25%" autocomplete="on" required>
-                </fieldset>
-              </div>
-              <div class="col-lg-4">
-                <fieldset>
-                  <label for="file">Your File</label>
-                  <input type="file" id="file" name="myfiles[]" multiple />
-                </fieldset>
-              </div>
-              <div class="col-lg-8">
-                <fieldset>
-                  <button type="submit" id="form-submit" class="orange-button">Submit Your Applying</button>
-                </fieldset>
-              </div>
+                {% if portfoliobuild_form.name.errors %}  
+                    {{ portfoliobuild_form.name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in portfoliobuild_form.name.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ portfoliobuild_form.name(class="form-control form-control-lg") }}
+                {% endif %}
             </div>
-          </form>
-        </div>
-        <div class="col-lg-12">
-          <div class="section-heading">
-            <div class="line-dec"></div>
-            <h2>This Is <em>Your Item</em> Preview.</h2>
-          </div>
-        </div>
-        <div class="col-lg-7">
-          <div class="left-image">
-            <img src="assets_3/images/create-yours.jpg" alt="" style="border-radius: 20px;">
-          </div>
-        </div>
-        <div class="col-lg-5 align-self-center">
-          <h4>Dolores Haze Westworld Eye</h4>
-          <span class="author">
-            <img src="assets_3/images/author-02.jpg" alt="" style="max-width: 50px; border-radius: 50%;">
-            <h6>Kataleya Smithee<br><a href="#">@kataleey</a></h6>
-          </span>
-          <p>Lorem ipsum dolor sit amet, consectetu dipiscingei elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <div class="row">
-            <div class="col-3">
-              <span class="bid">
-                Current Bid<br><strong>0.06 ETH</strong><br><em>($8055,35)</em>
-              </span>
+            <div class="col-lg-4">
+                {{ portfoliobuild_form.risk.label(class="form-control-label") }}
+
+                {% if portfoliobuild_form.risk.errors %}  
+                    {{ portfoliobuild_form.risk(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in portfoliobuild_form.risk.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ portfoliobuild_form.risk(class="form-control form-control-lg") }}
+                {% endif %}
             </div>
-            <div class="col-4">
-              <span class="owner">
-                Owner<br><strong>Alan Smithee</strong><br><em>(@asmithee)</em>
-              </span>
+            <div class="col-lg-4">
+                {{ portfoliobuild_form.mininvest.label(class="form-control-label") }}
+
+                {% if portfoliobuild_form.mininvest.errors %}  
+                    {{ portfoliobuild_form.mininvest(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in portfoliobuild_form.mininvest.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ portfoliobuild_form.mininvest(class="form-control form-control-lg") }}
+                {% endif %}
             </div>
-            <div class="col-5">
-              <span class="ends">
-                Ends In<br><strong>3D 05H 20M 58S</strong><br><em>(January 22nd, 2021)</em>
-              </span>
+            <br>
+
+            <div class="col-lg-12">
+                {{ portfoliobuild_form.description.label(class="form-control-label") }}
+
+                {% if portfoliobuild_form.description.errors %}  
+                    {{ portfoliobuild_form.description(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in portfoliobuild_form.description.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ portfoliobuild_form.description(class="form-control form-control-lg") }}
+                {% endif %}
             </div>
+            <div class="col-lg-4">
+                {{ portfoliobuild_form.asset1.label(class="form-control-label") }}
+
+                {% if portfoliobuild_form.asset1.errors %}  
+                    {{ portfoliobuild_form.asset1(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in portfoliobuild_form.asset1.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ portfoliobuild_form.asset1(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                {{ portfoliobuild_form.asset1_percentage.label(class="form-control-label") }}
+
+                {% if portfoliobuild_form.asset1_percentage.errors %}  
+                    {{ portfoliobuild_form.asset1_percentage(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in portfoliobuild_form.asset1_percentage.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ portfoliobuild_form.asset1_percentage(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                {{ portfoliobuild_form.asset1_type.label(class="form-control-label") }}
+
+                {% if portfoliobuild_form.asset1_type.errors %}  
+                    {{ portfoliobuild_form.asset1_type(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in portfoliobuild_form.asset1_type.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ portfoliobuild_form.asset1_type(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                {{ portfoliobuild_form.asset2.label(class="form-control-label") }}
+
+                {% if portfoliobuild_form.asset2.errors %}  
+                    {{ portfoliobuild_form.asset2(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in portfoliobuild_form.asset2.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ portfoliobuild_form.asset2(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                {{ portfoliobuild_form.asset2_percentage.label(class="form-control-label") }}
+
+                {% if portfoliobuild_form.asset2_percentage.errors %}  
+                    {{ portfoliobuild_form.asset2_percentage(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in portfoliobuild_form.asset2_percentage.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ portfoliobuild_form.asset2_percentage(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+                {{ portfoliobuild_form.asset2_type.label(class="form-control-label") }}
+
+                {% if portfoliobuild_form.asset2_type.errors %}  
+                    {{ portfoliobuild_form.asset2_type(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in portfoliobuild_form.asset2_type.errors %}
+                            <span>{{ error }}</span> 
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ portfoliobuild_form.asset2_type(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="col-lg-4">
+              {{ portfoliobuild_form.asset3.label(class="form-control-label") }}
+
+              {% if portfoliobuild_form.asset3.errors %}  
+                  {{ portfoliobuild_form.asset3(class="form-control form-control-lg is-invalid") }}
+                  <div class="invalid-feedback">
+                      {% for error in portfoliobuild_form.asset3.errors %}
+                          <span>{{ error }}</span> 
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ portfoliobuild_form.asset3(class="form-control form-control-lg") }}
+              {% endif %}
           </div>
+          <div class="col-lg-4">
+              {{ portfoliobuild_form.asset3_percentage.label(class="form-control-label") }}
+
+              {% if portfoliobuild_form.asset3_percentage.errors %}  
+                  {{ portfoliobuild_form.asset3_percentage(class="form-control form-control-lg is-invalid") }}
+                  <div class="invalid-feedback">
+                      {% for error in portfoliobuild_form.asset3_percentage.errors %}
+                          <span>{{ error }}</span> 
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ portfoliobuild_form.asset3_percentage(class="form-control form-control-lg") }}
+              {% endif %}
+          </div>
+          <div class="col-lg-4">
+              {{ portfoliobuild_form.asset3_type.label(class="form-control-label") }}
+
+              {% if portfoliobuild_form.asset3_type.errors %}  
+                  {{ portfoliobuild_form.asset3_type(class="form-control form-control-lg is-invalid") }}
+                  <div class="invalid-feedback">
+                      {% for error in portfoliobuild_form.asset3_type.errors %}
+                          <span>{{ error }}</span> 
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ portfoliobuild_form.asset3_type(class="form-control form-control-lg") }}
+              {% endif %}
+          </div>
+          <div class="col-lg-4">
+            {{ portfoliobuild_form.asset4.label(class="form-control-label") }}
+
+            {% if portfoliobuild_form.asset4.errors %}  
+                {{ portfoliobuild_form.asset4(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in portfoliobuild_form.asset4.errors %}
+                        <span>{{ error }}</span> 
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ portfoliobuild_form.asset4.class="form-control form-control-lg") }}
+            {% endif %}
         </div>
+        <div class="col-lg-4">
+            {{ portfoliobuild_form.asset4_percentage.label(class="form-control-label") }}
+
+            {% if portfoliobuild_form.asset4_percentage.errors %}  
+                {{ portfoliobuild_form.asset4_percentage(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in portfoliobuild_form.asset4_percentage.errors %}
+                        <span>{{ error }}</span> 
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ portfoliobuild_form.asset4_percentage(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+        <div class="col-lg-4">
+            {{ portfoliobuild_form.asset4_type.label(class="form-control-label") }}
+
+            {% if portfoliobuild_form.asset4_type.errors %}  
+                {{ portfoliobuild_form.asset4_type(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in portfoliobuild_form.asset4_type.errors %}
+                        <span>{{ error }}</span> 
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ portfoliobuild_form.asset4_type(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+        <div class="col-lg-4">
+          {{ portfoliobuild_form.asset5.label(class="form-control-label") }}
+
+          {% if portfoliobuild_form.asset5.errors %}  
+              {{ portfoliobuild_form.asset5(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                  {% for error in portfoliobuild_form.asset5.errors %}
+                      <span>{{ error }}</span> 
+                  {% endfor %}
+              </div>
+          {% else %}
+              {{ portfoliobuild_form.asset5(class="form-control form-control-lg") }}
+          {% endif %}
       </div>
+      <div class="col-lg-4">
+          {{ portfoliobuild_form.asset5_percentage.label(class="form-control-label") }}
+
+          {% if portfoliobuild_form.asset5_percentage.errors %}  
+              {{ portfoliobuild_form.asset5_percentage(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                  {% for error in portfoliobuild_form.asset5_percentage.errors %}
+                      <span>{{ error }}</span> 
+                  {% endfor %}
+              </div>
+          {% else %}
+              {{ portfoliobuild_form.asset5_percentage(class="form-control form-control-lg") }}
+          {% endif %}
+      </div>
+      <div class="col-lg-4">
+          {{ portfoliobuild_form.asset5_type.label(class="form-control-label") }}
+
+          {% if portfoliobuild_form.asset5_type.errors %}  
+              {{ portfoliobuild_form.asset5_type(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                  {% for error in portfoliobuild_form.asset5_type.errors %}
+                      <span>{{ error }}</span> 
+                  {% endfor %}
+              </div>
+          {% else %}
+              {{ portfoliobuild_form.asset5_type(class="form-control form-control-lg") }}
+          {% endif %}
+      </div>
+      <div class="col-lg-4">
+        {{ portfoliobuild_form.asset6.label(class="form-control-label") }}
+
+        {% if portfoliobuild_form.asset6.errors %}  
+            {{ portfoliobuild_form.asset6(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in portfoliobuild_form.asset6.errors %}
+                    <span>{{ error }}</span> 
+                {% endfor %}
+            </div>
+        {% else %}
+            {{ portfoliobuild_form.asset6(class="form-control form-control-lg") }}
+        {% endif %}
     </div>
+    <div class="col-lg-4">
+        {{ portfoliobuild_form.asset6_percentage.label(class="form-control-label") }}
+
+        {% if portfoliobuild_form.asset6_percentage.errors %}  
+            {{ portfoliobuild_form.asset6_percentage(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in portfoliobuild_form.asset6_percentage.errors %}
+                    <span>{{ error }}</span> 
+                {% endfor %}
+            </div>
+        {% else %}
+            {{ portfoliobuild_form.asset6_percentage(class="form-control form-control-lg") }}
+        {% endif %}
+    </div>
+    <div class="col-lg-4">
+        {{ portfoliobuild_form.asset6_type.label(class="form-control-label") }}
+
+        {% if portfoliobuild_form.asset6_type.errors %}  
+            {{ portfoliobuild_form.asset6_type(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in portfoliobuild_form.asset6_type.errors %}
+                    <span>{{ error }}</span> 
+                {% endfor %}
+            </div>
+        {% else %}
+            {{ portfoliobuild_form.asset6_type(class="form-control form-control-lg") }}
+        {% endif %}
+    </div>
+    <div class="col-lg-4">
+      {{ portfoliobuild_form.asset7.label(class="form-control-label") }}
+
+      {% if portfoliobuild_form.asset7.errors %}  
+          {{ portfoliobuild_form.asset7(class="form-control form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+              {% for error in portfoliobuild_form.asset7.errors %}
+                  <span>{{ error }}</span> 
+              {% endfor %}
+          </div>
+      {% else %}
+          {{ portfoliobuild_form.asset7(class="form-control form-control-lg") }}
+      {% endif %}
   </div>
+  <div class="col-lg-4">
+      {{ portfoliobuild_form.asset7_percentage.label(class="form-control-label") }}
 
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <p>Copyright © 2022 <a href="#">Liberty</a> NFT Marketplace Co., Ltd. All rights reserved.
-          &nbsp;&nbsp;
-          Designed by <a title="HTML CSS Templates" rel="sponsored" href="https://templatemo.com" target="_blank">TemplateMo</a></p>
+      {% if portfoliobuild_form.asset7_percentage.errors %}  
+          {{ portfoliobuild_form.asset7_percentage(class="form-control form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+              {% for error in portfoliobuild_form.asset7_percentage.errors %}
+                  <span>{{ error }}</span> 
+              {% endfor %}
+          </div>
+      {% else %}
+          {{ portfoliobuild_form.asset7_percentage(class="form-control form-control-lg") }}
+      {% endif %}
+  </div>
+  <div class="col-lg-4">
+      {{ portfoliobuild_form.asset7_type.label(class="form-control-label") }}
+
+      {% if portfoliobuild_form.asset7_type.errors %}  
+          {{ portfoliobuild_form.asset7_type(class="form-control form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+              {% for error in portfoliobuild_form.asset7_type.errors %}
+                  <span>{{ error }}</span> 
+              {% endfor %}
+          </div>
+      {% else %}
+          {{ portfoliobuild_form.asset7_type(class="form-control form-control-lg") }}
+      {% endif %}
+  </div>
+  <div class="col-lg-4">
+    {{ portfoliobuild_form.asset8.label(class="form-control-label") }}
+
+    {% if portfoliobuild_form.asset8.errors %}  
+        {{ portfoliobuild_form.asset8(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+            {% for error in portfoliobuild_form.asset8.errors %}
+                <span>{{ error }}</span> 
+            {% endfor %}
         </div>
+    {% else %}
+        {{ portfoliobuild_form.asset8(class="form-control form-control-lg") }}
+    {% endif %}
+</div>
+<div class="col-lg-4">
+    {{ portfoliobuild_form.asset8_percentage.label(class="form-control-label") }}
+
+    {% if portfoliobuild_form.asset8_percentage.errors %}  
+        {{ portfoliobuild_form.asset8_percentage(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+            {% for error in portfoliobuild_form.asset8_percentage.errors %}
+                <span>{{ error }}</span> 
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ portfoliobuild_form.asset8_percentage(class="form-control form-control-lg") }}
+    {% endif %}
+</div>
+<div class="col-lg-4">
+    {{ portfoliobuild_form.asset8_type.label(class="form-control-label") }}
+
+    {% if portfoliobuild_form.asset8_type.errors %}  
+        {{ portfoliobuild_form.asset8_type(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+            {% for error in portfoliobuild_form.asset8_type.errors %}
+                <span>{{ error }}</span> 
+            {% endfor %}
+        </div>
+    {% else %}
+        {{ portfoliobuild_form.asset8_type(class="form-control form-control-lg") }}
+    {% endif %}
+</div>
+<div class="col-lg-4">
+  {{ portfoliobuild_form.asset9.label(class="form-control-label") }}
+
+  {% if portfoliobuild_form.asset9.errors %}  
+      {{ portfoliobuild_form.asset9(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+          {% for error in portfoliobuild_form.asset9.errors %}
+              <span>{{ error }}</span> 
+          {% endfor %}
       </div>
-    </div>
-  </footer>
+  {% else %}
+      {{ portfoliobuild_form.asset9(class="form-control form-control-lg") }}
+  {% endif %}
+</div>
+<div class="col-lg-4">
+  {{ portfoliobuild_form.asset9_percentage.label(class="form-control-label") }}
 
-  <!-- Scripts -->
-  <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+  {% if portfoliobuild_form.asset9_percentage.errors %}  
+      {{ portfoliobuild_form.asset9_percentage(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+          {% for error in portfoliobuild_form.asset9_percentage.errors %}
+              <span>{{ error }}</span> 
+          {% endfor %}
+      </div>
+  {% else %}
+      {{ portfoliobuild_form.asset9_percentage(class="form-control form-control-lg") }}
+  {% endif %}
+</div>
+<div class="col-lg-4">
+  {{ portfoliobuild_form.asset9_type.label(class="form-control-label") }}
 
-  <script src="assets_3/js/isotope.min.js"></script>
-  <script src="assets_3/js/owl-carousel.js"></script>
-  <script src="assets_3/js/wow.js"></script>
-  <script src="assets_3/js/tabs.js"></script>
-  <script src="assets_3/js/popup.js"></script>
-  <script src="assets_3/js/custom.js"></script>
-  </body>
-</html>
+  {% if portfoliobuild_form.asset9_type.errors %}  
+      {{ portfoliobuild_form.asset9_type(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+          {% for error in portfoliobuild_form.asset9_type.errors %}
+              <span>{{ error }}</span> 
+          {% endfor %}
+      </div>
+  {% else %}
+      {{ portfoliobuild_form.asset9_type(class="form-control form-control-lg") }}
+  {% endif %}
+</div>
+<div class="col-lg-4">
+  {{ portfoliobuild_form.asset10.label(class="form-control-label") }}
 
+  {% if portfoliobuild_form.asset10.errors %}  
+      {{ portfoliobuild_form.asset10(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+          {% for error in portfoliobuild_form.asset10.errors %}
+              <span>{{ error }}</span> 
+          {% endfor %}
+      </div>
+  {% else %}
+      {{ portfoliobuild_form.asset10(class="form-control form-control-lg") }}
+  {% endif %}
+</div>
+<div class="col-lg-4">
+  {{ portfoliobuild_form.asset10_percentage.label(class="form-control-label") }}
+
+  {% if portfoliobuild_form.asset10_percentage.errors %}  
+      {{ portfoliobuild_form.asset10_percentage(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+          {% for error in portfoliobuild_form.asset10_percentage.errors %}
+              <span>{{ error }}</span> 
+          {% endfor %}
+      </div>
+  {% else %}
+      {{ portfoliobuild_form.asset10_percentage(class="form-control form-control-lg") }}
+  {% endif %}
+</div>
+<div class="col-lg-4">
+  {{ portfoliobuild_form.asset10_type.label(class="form-control-label") }}
+
+  {% if portfoliobuild_form.asset10_type.errors %}  
+      {{ portfoliobuild_form.asset10_type(class="form-control form-control-lg is-invalid") }}
+      <div class="invalid-feedback">
+          {% for error in portfoliobuild_form.asset10_type.errors %}
+              <span>{{ error }}</span> 
+          {% endfor %}
+      </div>
+  {% else %}
+      {{ portfoliobuild_form.asset10_type(class="form-control form-control-lg") }}
+  {% endif %}
+</div>
+
+        <br>
+        </div>
+        <ul class="actions">
+            {{ portfoliobuild_form.submit(class="btn btn-outline-info") }}
+        </ul>
+    </form>
+</article>
+</div>
+</div>
 {% endblock %}

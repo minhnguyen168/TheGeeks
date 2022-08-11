@@ -12,7 +12,7 @@ from flask import json
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
-from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm, FinancialGoalForm, SchedulerForm)
+from app.forms import (ClientRegistrationForm,BankerBuildForm,       ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm, FinancialGoalForm, SchedulerForm)
 from app.models import (User, Client, Banker, FinancialGoal, Portfolio, client_cluster, client_portfolio)
 from app.news import (News)
 from app import trade
@@ -246,7 +246,7 @@ def fingoals():
         return redirect(url_for('clientdashboard'))
         
     else:
-        flash('Login Unsuccessful. Please check username and password', 'danger')
+        flash('Update Unsuccessful' ,'danger')
 
     return render_template('financial_goals.html',financialgoal_form=financialgoal_form)
 
@@ -254,7 +254,55 @@ def fingoals():
 @app.route('/banker/build_portfolio',methods=['GET', 'POST'])
 # @login_required 
 def build_portfolio():
-    return render_template('banker_build_portfolio.html')
+    portfoliobuild_form=BankerBuildForm()
+    if portfoliobuild_form.validate_on_submit():
+        banker=Banker.query.filter_by(userid=current_user.id).first()
+        portfolio = Portfolio(
+            banker_id = banker.banker_id,
+            name = portfoliobuild_form.name.data,
+            risk = portfoliobuild_form.risk.data,
+            mininvest= portfoliobuild_form.mininvest.data,
+            description = portfoliobuild_form.description.data,
+            asset1 =  portfoliobuild_form.asset1.data,
+            asset1_percentage =  portfoliobuild_form.asset1_percentage.data,
+            asset1_type =  portfoliobuild_form.asset1_type.data,
+            asset2 =  portfoliobuild_form.asset2.data,
+            asset2_percentage =  portfoliobuild_form.asset2_percentage.data,
+            asset2_type =  portfoliobuild_form.asset2_type.data,
+            asset3 =  portfoliobuild_form.asset3.data,
+            asset3_percentage =  portfoliobuild_form.asset3_percentage.data,
+            asset3_type =  portfoliobuild_form.asset3_type.data,
+            asset4 =  portfoliobuild_form.asset4.data,
+            asset4_percentage =  portfoliobuild_form.asset4_percentage.data,
+            asset4_type =  portfoliobuild_form.asset4_type.data,
+            asset5 =  portfoliobuild_form.asset5.data,
+            asset5_percentage =  portfoliobuild_form.asset5_percentage.data,
+            asset5_type =  portfoliobuild_form.asset5_type.data,
+            asset6 =  portfoliobuild_form.asset6.data,
+            asset6_percentage =  portfoliobuild_form.asset6_percentage.data,
+            asset6_type =  portfoliobuild_form.asset6_type.data,
+            asset7 =  portfoliobuild_form.asset7.data,
+            asset7_percentage =  portfoliobuild_form.asset7_percentage.data,
+            asset7_type =  portfoliobuild_form.asset7_type.data,
+            asset8 =  portfoliobuild_form.asset8.data,
+            asset8_percentage =  portfoliobuild_form.asset8_percentage.data,
+            asset8_type =  portfoliobuild_form.asset8_type.data,
+            asset9 =  portfoliobuild_form.asset9.data,
+            asset9_percentage =  portfoliobuild_form.asset9_percentage.data,
+            asset9_type =  portfoliobuild_form.asset9_type.data,
+            asset10 =  portfoliobuild_form.asset10.data,
+            asset10_percentage =  portfoliobuild_form.asset10_percentage.data,
+            asset10_type =  portfoliobuild_form.asset10_type.data,
+
+        )
+        db.session.add(portfolio)
+        db.session.commit()
+        flash('Goals Captured!', 'danger')
+        return redirect(url_for('bankerdashboard'))
+        
+    else:
+        flash('Update Unsuccessful' ,'danger')
+    return render_template('banker_build_portfolio.html',portfoliobuild_form=portfoliobuild_form)
 
 #Banker_view_client page
 @app.route('/banker/viewclients',methods=['GET', 'POST'])
