@@ -45,7 +45,7 @@
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-                    <a href="{{url_for('clienthome')}}" class="logo">
+                    <a href="{{url_for('bankerdashboard')}}" class="logo">
                         <img src="{{ url_for('static', filename='assets_3/images/logo.png')}}" alt="">
                     </a>
                     <!-- ***** Logo End ***** -->
@@ -54,9 +54,9 @@
                       <div class="dropdown">
                         <button class="dropbtn">Client</button>
                         <div class="dropdown-content">
-                          <a href="{{url_for('client_segmentation')}}">Client Segmentation</a>
-                          <a href="#">Link 2</a>
-                          <a href="#">Link 3</a>
+                          <a href="{{url_for('banker_view_client')}}">View Your Client</a>
+                          <a href="{{url_for('client_segmentation')}}">Customer Segmentation</a>
+                          <a href="#">Potential Clients</a>
                         </div>
                       </div>
                         <li><a href="explore.html">Insights</a></li>
