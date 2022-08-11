@@ -209,9 +209,7 @@ def calendarapi(clientid,startYYYYMMDDHHMM,endYYYYMMDDHHMM):
     # f.write(cal.to_ical())
     # f.close()
     flash('Meeting Scheduled!')
-    
-    headers={'Location' : 'http://ec2-18-141-3-51.ap-southeast-1.compute.amazonaws.com:5000/banker/dashboard'}
-    return Response(cal.to_ical(), mimetype='text/calendar', status=302, headers=headers)
+    return Response(cal.to_ical(), mimetype='text/calendar')
 
 #end calendar invite miniAPI
 
