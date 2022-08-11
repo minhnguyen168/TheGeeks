@@ -11,7 +11,7 @@ from flask import json
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
-from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm)
+from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm, FinancialGoalForm)
 from app.models import (User, Client, Banker, FinancialGoal, Portfolio, client_portfolio)
 # from app.news import (News)
 from app import trade
@@ -40,33 +40,6 @@ def mainpage():
 def element():
     return render_template('elements.html')
 
-@app.route('/client',methods=['GET', 'POST'])
-def client():
-    if current_user.is_authenticated: 
-        return redirect(url_for('clienthome'))
-    clientregister_form = ClientRegistrationForm()
-    clientlogin_form=ClientLoginForm()
-    if clientregister_form.validate_on_submit():
-        print('valid')
-        hashed_password = bcrypt.generate_password_hash(clientregister_form.password.data).decode('utf-8')
-        user = User(name=clientregister_form.name.data, NRIC=clientregister_form.nric.data, password=hashed_password,email=clientregister_form.email.data,banker=0)
-        db.session.add(user)
-        db.session.commit()
-        db.session.refresh(user)
-        newclient = Client(userid=user.id)
-        db.session.add(newclient)
-        db.session.commit()
-        flash("Your account has been created! You are now able to log in", 'success') 
-        return redirect('/client#login')
-    if clientlogin_form.validate_on_submit():
-        user = User.query.filter_by(email=clientlogin_form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, clientlogin_form.password.data) and user.banker==0:
-            login_user(user, remember=clientlogin_form.remember.data)
-            next_page = request.args.get('next')
-            return redirect(url_for('clienthome'))
-        else:
-            flash('Login Unsuccessful. Please check username and password', 'danger')
-    return render_template('client.html',clientregister_form=clientregister_form, clientlogin_form=clientlogin_form)
 
 @app.route('/client_login',methods=['GET', 'POST'])
 def client_login():
@@ -130,7 +103,58 @@ def banker_login():
 #Become a client page
 @app.route('/become_a_client',methods=['GET', 'POST'])
 def become_a_client():
-    return render_template('become_a_client.html')
+    if current_user.is_authenticated: 
+        return redirect(url_for('clienthome'))
+    clientregister_form = ClientRegistrationForm()
+    if clientregister_form.validate_on_submit():
+        print('valid')
+        hashed_password = bcrypt.generate_password_hash(clientregister_form.password.data).decode('utf-8')
+        user = User(name=clientregister_form.name.data, NRIC=clientregister_form.nric.data, password=hashed_password,email=clientregister_form.email.data, city=clientregister_form.city.data,dateofbirth=clientregister_form.dateofbirth.data,contactno=clientregister_form.contactno.data,banker=0)
+        db.session.add(user)
+        db.session.commit()
+        db.session.refresh(user)
+        newclient = Client(userid=user.id)
+        db.session.add(newclient)
+        db.session.commit()
+        flash("Your account has been created! You are now able to log in", 'success') 
+    return render_template('become_a_client.html',clientregister_form=clientregister_form)
+
+@app.route('/client/financialgoals',methods=['GET', 'POST'])
+@login_required 
+def fingoals():
+    financialgoal_form=FinancialGoalForm()
+    if financialgoal_form.validate_on_submit():
+        client=Client.query.filter_by(userid=current_user.id).first()
+        fingoal = FinancialGoal(
+            client_id = client.client_id,
+            investmentgoal = financialgoal_form.investmentgoal.data,
+            yeartorealisegoal = financialgoal_form.yeartorealisegoal.data,
+            endgoal = financialgoal_form.endgoal.data,
+            annualincome = financialgoal_form.annualincome.data,
+            estimatednetworth = financialgoal_form.estimatednetworth.data,
+            initialamount = financialgoal_form.initialamount.data,
+            topupamountmonthly = financialgoal_form.topupamountmonthly.data,
+            valueofcurrentinvestment = financialgoal_form.valueofcurrentinvestment.data,
+            equity = financialgoal_form.equity.data,
+            fixedincome = financialgoal_form.fixedincome.data,
+            forexcommodities = financialgoal_form.forexcommodities.data,
+            mutualfund = financialgoal_form.mutualfund.data,
+            crypto = financialgoal_form.crypto.data,
+            realestate = financialgoal_form.realestate.data,
+            otherinvestment = financialgoal_form.otherinvestment.data,
+            prioritiesofinvestment = financialgoal_form.prioritiesofinvestment.data,
+            riskappetite = financialgoal_form.riskappetite.data,
+            dropvalue = financialgoal_form.dropvalue.data
+        )
+        db.session.add(fingoal)
+        db.session.commit()
+        flash('Goals Captured!', 'danger')
+        return redirect(url_for('clientdashboard'))
+        
+    else:
+        flash('Login Unsuccessful. Please check username and password', 'danger')
+
+    return render_template('financial_goals.html',financialgoal_form=financialgoal_form)
 
 #Build portfolio page
 @app.route('/banker/build_portfolio',methods=['GET', 'POST'])
@@ -149,45 +173,34 @@ def clientdashboard():
     user = User.query.filter_by(id=current_user.get_id()).first()
     client_id  = Client.query.filter_by(userid=current_user.get_id()).first().client_id
 
-    client_portfolio_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id=' + str(client_id), db.session.bind)
-    totalAssets = client_portfolio_df.amount_purchase.sum()
+    ## Calculating Statistics
+    client_portfolios_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id =' + str(client_id), db.session.bind)
+    totalAssets = client_portfolios_df.amount_purchase.sum()
+    portfolioIDs = client_portfolios_df.portfolio_id.unique()
+    totalPortfolios = len(portfolioIDs)
 
-    portfolioIDs = client_portfolio_df["portfolio_id"].unique()
-    
-    assets = []
-    
-    # types = {}
+    market_names = []
 
     for p in portfolioIDs:
+        row  = pd.read_sql('SELECT * FROM Portfolio p WHERE p.portfolio_id =' + str(p), db.session.bind)
 
-        statement = 'SELECT * FROM Portfolio P WHERE  P.portfolio_id=' + str(p)
-        row = pd.read_sql(statement , db.session.bind)
+        for i in range(1,11):
+            market = row["asset"+str(i)][0]
+            market_names.append(market)
 
-        for i in range(1, 11):
-            assets.append(row["asset"+str(i)][0])
-            atype = row["asset"+str(i)+"_type"]
-            # if atype in types:
-            #     types[atype] += 1
-            # else:
-            #     types[atype] = 1
-
-    # print(types)
-
-    market_name = list(set(assets))
+    market_names = list(set(market_names))
+    
     today = trade.get_today()
     start = trade.get_one_day_period(today)
-    percentageRecord = []
 
-    for m in market_name:
-        perc = round(trade.cal_1d_diff(m, start, today),2)
-        percentageRecord.append(perc)
+    marketChange = []
 
-    dates = json.dumps(client_portfolio_df["date_purchase"].to_list())
-    values = json.dumps(client_portfolio_df["amount_purchase"].to_list())
+    for m in market_names:
+        marketChange.append(round(trade.cal_1d_diff(m, start, today),2)) # should have two records
 
-    return render_template('client_dashboard.html', portfolios=client_portfolio_df, 
-    totalAssets=totalAssets, markets=market_name, marketChange=percentageRecord,
-    dates=dates, values=values)
+
+    return render_template('client_dashboard.html', totalAssets=totalAssets, totalPortfolios=totalPortfolios,
+        markets=market_names, marketChange=marketChange)
 
 @app.route('/banker/home',methods=['GET', 'POST'])
 #@login_required
@@ -202,8 +215,15 @@ def bankerdashboard():
 @app.route('/banker/dashboard/clientDetails',methods=['GET', 'POST'])
 # @login_required 
 def bankerclientdetails():
+
     return render_template('banker_client_details.html')
 
+@app.route('/banker/clientsegmentation',methods=['GET', 'POST'])
+# @login_required 
+def client_segmentation():
+    df=db.session.execute('SELECT c.client_id, u.dateofbirth, u.city, f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue FROM User u, Client c, FinancialGoal f WHERE u.banker=0 AND u.id =c.userid AND c.client_id=f.client_id')
+    df = pd.DataFrame(df)
+    return render_template('customer_segmentation.html')
 ### Stripe Integration
 @app.route("/checkout", methods=['GET','POST'])
 @login_required
@@ -243,19 +263,19 @@ def logoutbanker():
     logout_user()
     return redirect(url_for('banker'))
 
-# @app.route('/client/news', methods=['GET', 'POST']) 
-# def news_client(): 
-#      news_obj = News()
-#      images_list = []
-#      news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
-#      # news_summary = news_obj.get_news_summary(news_df)
-#      news_form = NewsFilterForm()
-#      if news_form.validate_on_submit():
-#          start_date = int(str(news_form.startdate.data).replace("-", ""))
-#          end_date = int(str(news_form.enddate.data).replace("-", ""))
-#          news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
-#          # news_summary = news_obj.get_news_summary(news_df)
-#      return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
+@app.route('/client/news', methods=['GET', 'POST']) 
+def news_client(): 
+     news_obj = News()
+     images_list = []
+     news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
+     news_summary = news_obj.get_news_summary(news_df)
+     news_form = NewsFilterForm()
+     if news_form.validate_on_submit():
+         start_date = int(str(news_form.startdate.data).replace("-", ""))
+         end_date = int(str(news_form.enddate.data).replace("-", ""))
+         news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
+         news_summary = news_obj.get_news_summary(news_df)
+     return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form, images_list=images_list)
 
 # @app.route('/banker/news', methods=['GET', 'POST'])
 # def news_banker():
