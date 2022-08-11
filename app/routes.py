@@ -3,7 +3,7 @@ from flask_login.mixins import UserMixin
 from app import app, db, bcrypt, login_manager, socketio
 from flask_socketio import SocketIO, join_room
 from flask import render_template
-from flask import url_for 
+from flask import url_for, Response 
 from flask import flash, session
 from flask import redirect
 from flask import request, abort
@@ -12,7 +12,7 @@ from flask import json
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
-from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm, FinancialGoalForm)
+from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm, FinancialGoalForm, SchedulerForm)
 from app.models import (User, Client, Banker, FinancialGoal, Portfolio, client_cluster, client_portfolio)
 from app.news import (News)
 from app import trade
@@ -20,8 +20,13 @@ import yfinance as yf
 import stripe
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
 from app.cluster_model import (clustering)
-
+from icalendar import Calendar, Event, vCalAddress, vText
+import pytz
+from datetime import datetime
+from pathlib import Path
+import dateutil.tz
 
 stripe_keys = {
     "secret_key": 'sk_test_51LUn73DmP0YmkHd0O5l77njV0F1M1QR8LzyaFKahQ8pugfrYV2swno5R7XhipkxbYcYqAgzUCoUBby1EQGEGnhw700852bTBqN',
@@ -122,6 +127,9 @@ def become_a_client():
         flash("Your account has been created! You are now able to log in", 'success') 
     return render_template('become_a_client.html',clientregister_form=clientregister_form)
 
+
+
+
 #chat
 
 @app.route('/chat/<id>')
@@ -147,8 +155,65 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
     join_room(room)
     print('received my event: ' + str(json))
     socketio.emit('my response', json, callback=messageReceived, room=room)
-
 #endchat
+
+#Scheduling page
+@app.route('/banker/schedule/<clientid>', methods=['GET', 'POST'])
+@login_required
+def scheduler(clientid):
+    scheduler_form=SchedulerForm()
+    
+    if scheduler_form.validate_on_submit():
+        
+        a=(str(scheduler_form.startdate_field.data).replace("-", ""))
+        b=(str(scheduler_form.starttime_field.data).replace(":", ""))
+        c=(str(scheduler_form.enddate_field.data).replace("-", ""))
+        d=(str(scheduler_form.endtime_field.data).replace(":", ""))
+        return redirect(url_for('calendarapi',clientid=clientid,startYYYYMMDDHHMM=a+b,endYYYYMMDDHHMM=c+d))
+    return render_template('scheduler.html',scheduler_form=scheduler_form)
+
+#
+
+#Calendar invite miniAPI
+@app.route('/banker/schedule/<clientid>/<startYYYYMMDDHHMM>/<endYYYYMMDDHHMM>')
+@login_required
+def calendarapi(clientid,startYYYYMMDDHHMM,endYYYYMMDDHHMM):
+    cal = Calendar()
+    startYYYYMMDDHHMM=str(startYYYYMMDDHHMM)
+    endYYYYMMDDHHMM=str(endYYYYMMDDHHMM)
+    clientfromid=Client.query.filter_by(client_id=clientid).first()
+    client=User.query.filter_by(id=clientfromid.userid).first()
+    bankername=current_user.name
+    
+    cal.add(current_user.name, 'MAILTO:'+current_user.email)
+    cal.add(client.name, 'MAILTO:'+client.email)
+
+    event = Event()
+    event.add('summary', 'TheGeeks Wealth Management Consulting Session with '+current_user.name+' and '+client.name)
+    event.add('dtstart', datetime(int(startYYYYMMDDHHMM[0:4]), int(startYYYYMMDDHHMM[4:6]), int(startYYYYMMDDHHMM[6:8]), int(startYYYYMMDDHHMM[8:10]), int(startYYYYMMDDHHMM[10:12]), 0, tzinfo=dateutil.tz.gettz('Asia/Singapore')))
+    event.add('dtend', datetime(int(endYYYYMMDDHHMM[0:4]), int(endYYYYMMDDHHMM[4:6]), int(endYYYYMMDDHHMM[6:8]), int(endYYYYMMDDHHMM[8:10]), int(endYYYYMMDDHHMM[10:12]), 0, tzinfo=dateutil.tz.gettz('Asia/Singapore')))
+    event.add('dtstamp', datetime.now())
+
+    organizer = vCalAddress('MAILTO:'+current_user.email)
+    organizer.params['cn'] = vText(current_user.name)
+    organizer.params['role'] = vText('Banker')
+    event['organizer'] = organizer
+    event['location'] = vText('http://ec2-18-141-3-51.ap-southeast-1.compute.amazonaws.com:5000/chat/'+str(clientid))
+
+    # Adding events to calendar
+    cal.add_component(event)
+
+    # directory = str(Path(__file__).parent.parent) + "/"
+    # print("ics file will be generated at ", directory)
+    # f = open(os.path.join(directory, str(clientid)+'.ics'), 'wb')
+    # f.write(cal.to_ical())
+    # f.close()
+    flash('Meeting Scheduled!')
+    
+    headers={'Location' : 'http://ec2-18-141-3-51.ap-southeast-1.compute.amazonaws.com:5000/banker/dashboard'}
+    return Response(cal.to_ical(), mimetype='text/calendar', status=302, headers=headers)
+
+#end calendar invite miniAPI
 
 @app.route('/client/financialgoals',methods=['GET', 'POST'])
 @login_required 
@@ -301,6 +366,7 @@ def bankerdashboard():
     return render_template('banker_dashboard.html', images_list=images_list)
 
 
+
 @app.route('/banker/dashboard/clientDetails',methods=['GET', 'POST'])
 # @login_required 
 def bankerclientdetails():
@@ -434,15 +500,22 @@ def show_market_details():
 
 @app.route('/client/portfolio', methods=['GET', 'POST'])
 def shop_portfolio():
-    df = db.session.execute('SELECT * FROM Portfolio')
+    user = User.query.filter_by(id=current_user.get_id()).first()
+    client_id = Client.query.filter_by(userid=current_user.get_id()).first().client_id
+
+    client_portfolios_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id =' + str(client_id),
+                                       db.session.bind)
+
+    portfolioIDs = client_portfolios_df.portfolio_id.unique()
+
+    #print(portfolioIDs) # in an array
+    df = db.session.execute('SELECT * FROM Portfolio where portfolio_id NOT IN (%s)' % tuple(portfolioIDs))
     df = pd.DataFrame(df)
-    print(df)
-    return render_template('shopPortfolio.html', df=df)
+
+    return render_template('shopPortfolio.html', df=df, port_id=portfolioIDs)
 
 @app.route('/client/portfolio_details', methods=['GET', 'POST'])
 def show_port_details():
-    # user = User.query.filter_by(id=current_user.get_id()).first()
-    # client_id = Client.query.filter_by(userid=current_user.get_id()).first().client_id
     #
     # ## Calculating Statistics
     # client_portfolios_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id =' + str(client_id),
@@ -503,7 +576,33 @@ def show_port_details():
         #         print(j)
         #         print(asset_list[j])
 
-        for j in range(len(asset_list)):
-            print(len(asset_adj_close[j]))
-            print(asset_list[j])
+        price_list = [] # contain the portfolio market price sum
+
+        for index in range(len(date_list)):
+            price_sum = 0
+            for asset in range(len(asset_list)):
+                price_sum = price_sum + asset_adj_close[asset][index]
+            price_list.append(price_sum)
+
+        plt.switch_backend('Agg')
+        # fig, ax = plt.subplots(nrows=1, ncols=1)  # create figure & 1 axis
+        # ax.plot(date_list, price_list)
+        # fig.savefig('static/images/portfolio.png')  # save the figure to file
+        # plt.close(fig)
+
+        plt.plot(date_list, price_list)
+        plt.xlabel('Year')
+        plt.ylabel('Portfolio value')
+        plt.title('Changes in Portfolio Market Price Over the Past 5 Years')
+        plt.legend(['Market Price'])
+
+        # save the figure
+        plt.savefig('app/static/images/portfolio.png', dpi=300, bbox_inches='tight')
+        plt.show()
+
+        plt.close()
+        # print(len(price_list))
+        # print(len(date_list))
+        # print(price_list[5])
+        # print(date_list[5])
     return render_template('port_details.html', asset_list=asset_list, weight_list=weight_list, asset_hist_df=asset_hist_df, port_name=port_name, date_list=date_list, asset_adj_close=asset_adj_close)

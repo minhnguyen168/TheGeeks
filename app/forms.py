@@ -5,8 +5,9 @@ from wtforms.fields import DateField
 from wtforms.validators import InputRequired, Length, Email, EqualTo, ValidationError, DataRequired, NumberRange
 from app.models import (User)
 from flask_login import current_user
-
-
+from wtforms import Form, StringField
+from wtforms.widgets import TimeInput
+import datetime
 
 class ClientRegistrationForm(FlaskForm):
     name =  StringField("Name", validators=[InputRequired(), Length(min=2, max=20)])
@@ -107,6 +108,52 @@ class BankerBuildForm(FlaskForm):
     asset10_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
 
 
+
+
+
+
+class TimeField(StringField):
+    """HTML5 time input."""
+    widget = TimeInput()
+
+    def __init__(self, label=None, validators=None, format='%H:%M:%S', **kwargs):
+        super(TimeField, self).__init__(label, validators, **kwargs)
+        self.format = format
+
+    def _value(self):
+        if self.raw_data:
+            return ' '.join(self.raw_data)
+        else:
+            return self.data and self.data.strftime(self.format) or ''
+
+    def process_formdata(self, valuelist):
+        if valuelist:
+            time_str = ''.join(valuelist)
+            try:
+                components = time_str.split(':')
+                hour = 0
+                minutes = 0
+                seconds = 0
+                if len(components) in range(2,4):
+                    hour = int(components[0])
+                    minutes = int(components[1])
+
+                    if len(components) == 3:
+                        seconds = int(components[2])
+                else:
+                    raise ValueError
+                self.data = datetime.time(hour, minutes, seconds)
+            except ValueError:
+                self.data = None
+                raise ValueError(self.gettext('Not a valid time string'))
+
+
+class SchedulerForm(FlaskForm):
+    startdate_field = DateField('Start Date',validators=[InputRequired()])
+    starttime_field = TimeField('Start Time',validators=[InputRequired()])
+    enddate_field = DateField('End Date',validators=[InputRequired()])
+    endtime_field = TimeField('End Time',validators=[InputRequired()])
+    submit = SubmitField('Submit')
 
 
 
