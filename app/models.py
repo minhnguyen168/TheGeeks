@@ -80,7 +80,6 @@ class FinancialGoal(db.Model):
     investmentgoal = db.Column(db.String(120))
     yeartorealisegoal = db.Column(db.Integer)
     endgoal = db.Column(db.Integer)
-    age = db.Column(db.Integer)
     annualincome = db.Column(db.Integer)
     estimatednetworth = db.Column(db.Integer)
     initialamount = db.Column(db.Integer)
