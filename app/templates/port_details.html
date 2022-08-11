@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>Trade</title>
+		<title>Portfolio</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{{url_for('static', filename='assets_2/css/main.css')}}" />
@@ -17,23 +17,21 @@
 				<!-- Header -->
 					<header id="header" class="alt">
 
-						<h1>Stock Information</h1>
-						<h6> Data from Yahoo Finance </h6>
+						<h1>{{port_name}}</h1> <!--name of the portfolio-->
 
 					</header>
                 {% block content %}
-				<div class=ticker_box>
-				{% for index in range(tickers|length)%}
-					<div class=ticker_inner_box>
-						<!--h3>{{markets[index]}}</h3-->
-						<form action="{{ url_for('show_market_details')}}" method="post">
-							<input class="ticker_button" name="ticker_detail" type="submit" value="{{markets[index]}}">
-     					</form>
-						<p>Sector: {{tickers[index].info['sector']}}</p>
-						<p>Current Price: {{tickers[index].info['currentPrice']}}</p>
-
-					</div>
-                {% endfor %}
+				<div>
+				  {% set price_list = [] %} <!--will contain the portfolio market price sum for each day-->
+				  {% for index in range(date_list|length)%}
+					{% set price_sum = 0 %}
+					{% for asset in range(asset_list|length)%}
+						{{asset}}
+						{{index}}
+					  {%set price_sum = price_sum + asset_adj_close[asset][index]%}
+					{% endfor %}
+					{{ price_list.append(price_sum)}}
+				  {% endfor %}
 				</div>
 
 

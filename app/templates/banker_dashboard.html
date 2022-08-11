@@ -158,6 +158,46 @@
               </div>
             </div>
           </div>
+
+          <div class="col-lg-12">
+            <div class="item">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h4>Customers Interests</h4>
+                  <div class="line-dec"></div>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <br>
+                <div class="row">
+                  <form action="{{url_for('bankerdashboard')}}" method="post">
+                    <label for="usergroups" style="color: white; padding:10px;">User Segment</label>
+                    <select id="usergroups" name="usergroups" class="form-select">
+                      <option selected value="1">User Group 1</option>
+                      <option value="2">User Group 2</option>
+                      <option value="3">User Group 3</option>
+                      <option value="4">User Group 4</option>
+                    </select>
+                    <br/>
+                    <label for="topics" style="color: white; padding:10px;">Topics</label>
+                    <select id="topics" name="topics" class="form-select">
+                      <option selected value="1">Topic 1</option>
+                      <option value="2">Topic 2</option>
+                      <option value="3">Topic 3</option>
+                      <option value="4">Topic 4</option>
+                    </select>
+                    <br>
+                    <input class="btn btn-primary" type="submit" value="Submit">
+                  </form>
+                  <div>
+                    {% for index, wordcloud in images_list %}
+                    <h3>Topic {{index}}: </h3><img src="{{ url_for('static', filename='images/' + wordcloud)}}" height="240px" width="300px">
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>       
       </div>
 
   <script type="text/javascript">

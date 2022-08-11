@@ -1013,6 +1013,10 @@ input, select, textarea {
 				border-top: 0;
 			}
 
+			td button {
+                margin: 10px;
+			}
+
 /* Button */
 
 	input[type="submit"],
