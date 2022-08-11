@@ -1,0 +1,14 @@
+BEGIN:VCALENDAR
+ALLEN CHESON:MAILTO:acheson0@dailymotion.com
+MARLON LOWDER:MAILTO:mlowder1@yellowpages.com
+BEGIN:VEVENT
+SUMMARY:TheGeeks Wealth Management Consulting Session with Marlon Lowder a
+ nd Allen Cheson
+DTSTART;TZID=+08;VALUE=DATE-TIME:20220812T033000
+DTEND;TZID=+08;VALUE=DATE-TIME:20220812T034000
+DTSTAMP;VALUE=DATE-TIME:20220812T033059Z
+LOCATION:http://ec2-18-141-3-51.ap-southeast-1.compute.amazonaws.com:5000/
+ chat/1
+ORGANIZER;CN="Marlon Lowder";ROLE=Banker:MAILTO:mlowder1@yellowpages.com
+END:VEVENT
+END:VCALENDAR
