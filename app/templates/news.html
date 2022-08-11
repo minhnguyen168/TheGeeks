@@ -1,16 +1,12 @@
-<!DOCTYPE HTML>
+{% extends "client_landing.html" %}
 
-<html>
-	<head>
-		<title>News Resources</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='assets_2/css/main.css')}}" />
-		<noscript><link rel="stylesheet" href="{{ url_for('static', filename='assets_2/css/noscript.css')}}" /></noscript>
-	</head>
-	<body class="is-preload">
+{% block content %}
+<div class="item-details-page">
+	<div class="container">
+		<div class="row">
 		<!-- Wrapper -->
 			<div id="wrapper">
+				<h1>News Resources</h1>
                 <h3> Filter by Date Range </h3>
                 <form action="" method='POST' name="newsform">
                     {{ news_form.csrt_token }}
@@ -18,7 +14,6 @@
                     <p>{{ news_form.enddate.label }} {{news_form.enddate(class='datepicker')}} {{news_form.hidden_tag()}}</p>
                     <p>{{news_form.submit()}}</p>
                 </form>
-
                 <ul class=flashes>
                 {% for index, news in news_df.iterrows()%}
                 <li><a href="{{news['news_url']}}">{{ news["news_title"] }}</a></li>
@@ -26,6 +21,8 @@
                 </ul>
 
                 {% if news_summary != "" %}
+				<br>
+				<br>
                 <h3>News Summary:</h3>
                 <p>{{ news_summary }}</p>
                 {% endif %}
@@ -34,22 +31,11 @@
 				<p>{{wordcloud}}</p>
 				<h3>Topic {{index}}: </h3><img src="{{wordcloud}}" height="240px" width="300px">
 				{% endfor %}
-            <!-- Footer -->
-                <footer id="footer">
-                    <p class="copyright">&copy; TheGeeks.</p>
-                </footer>
+	
+			</div>	
+		</div>		
+	</div>			
+</div>
 
-			</div>
 
-		<!-- BG -->
-			<div id="bg"></div>
-
-		<!-- Scripts -->
-			<script src="{{ url_for('static', filename='assets_2/js/jquery.min.js')}}"></script>
-			<script src="{{ url_for('static', filename='assets_2/js/browser.min.js')}}"></script>
-			<script src="{{ url_for('static', filename='assets_2/js/breakpoints.min.js')}}"></script>
-			<script src="{{ url_for('static', filename='assets_2/js/util.js')}}"></script>
-			<script src="{{ url_for('static', filename='assets_2/js/main.js')}}"></script>
-
-	</body>
-</html>
+{% endblock %}

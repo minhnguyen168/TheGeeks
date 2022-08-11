@@ -12,12 +12,13 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_, and_
 from flask_sqlalchemy import Pagination
 from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrationForm,BankerLoginForm, NewsFilterForm, FinancialGoalForm)
-from app.models import (User, Client, Banker, FinancialGoal, Portfolio, client_portfolio)
-# from app.news import (News)
+from app.models import (User, Client, Banker, FinancialGoal, Portfolio, client_cluster, client_portfolio)
+from app.news import (News)
 from app import trade
 import stripe
 import pandas as pd
 import os
+from app.cluster_model import (clustering)
 
 
 stripe_keys = {
@@ -169,7 +170,6 @@ def clienthome():
 @app.route('/client/dashboard',methods=['GET', 'POST'])
 # @login_required 
 def clientdashboard():
-
     user = User.query.filter_by(id=current_user.get_id()).first()
     client_id  = Client.query.filter_by(userid=current_user.get_id()).first().client_id
 
@@ -232,7 +232,15 @@ def bankerclientdetails():
 def client_segmentation():
     df=db.session.execute('SELECT c.client_id, u.dateofbirth, u.city, f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue FROM User u, Client c, FinancialGoal f WHERE u.banker=0 AND u.id =c.userid AND c.client_id=f.client_id')
     df = pd.DataFrame(df)
-    return render_template('customer_segmentation.html')
+    result=clustering().AC_cluster(df=df)
+    for i in range(0,result.shape[0]):
+        db.session.execute("delete from client_cluster")
+        cluster=client_cluster(client_id=int(result.iloc[i,0]),dateofbirth=str(result.iloc[i,1]),city=str(result.iloc[i,2]),investmentgoal=str(result.iloc[i,3]),yeartorealisegoal=int(result.iloc[i,4]),endgoal=int(result.iloc[i,5]),	annualincome=int(result.iloc[i,6]),estimatednetworth=int(result.iloc[i,7]),topupamountmonthly=int(result.iloc[i,8]),valueofcurrentinvestment=int(result.iloc[i,9]),equity=int(result.iloc[i,10]),fixedincome=int(result.iloc[i,11]),forexcommodities=result.iloc[i,12],mutualfund=result.iloc[i,13],crypto=result.iloc[i,14],realestate=result.iloc[i,15],otherinvestment=result.iloc[i,16],prioritiesofinvestment=str(result.iloc[i,17]),riskappetite=result.iloc[i,18],dropvalue=str(result.iloc[i,19]),age=result.iloc[i,20],Cluster_AC=result.iloc[i,21])
+        db.session.add(cluster)
+        db.session.commit()
+        db.session.refresh(cluster)
+    return render_template('customer_segmentation.html',df=df)
+
 ### Stripe Integration
 @app.route("/checkout", methods=['GET','POST'])
 @login_required
