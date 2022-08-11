@@ -22,16 +22,7 @@
 					</header>
                 {% block content %}
 				<div>
-				  {% set price_list = [] %} <!--will contain the portfolio market price sum for each day-->
-				  {% for index in range(date_list|length)%}
-					{% set price_sum = 0 %}
-					{% for asset in range(asset_list|length)%}
-						{{asset}}
-						{{index}}
-					  {%set price_sum = price_sum + asset_adj_close[asset][index]%}
-					{% endfor %}
-					{{ price_list.append(price_sum)}}
-				  {% endfor %}
+					<img src="{{url_for('static', filename='/images/portfolio.png')}}" width="1000" height="500">
 				</div>
 
 
