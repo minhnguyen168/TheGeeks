@@ -240,16 +240,29 @@ def bankerhome():
 @app.route('/banker/dashboard',methods=['GET', 'POST'])
 # @login_required 
 def bankerdashboard():
-
-    if request.method == "POST":
-        topic = request.form["topics"]
+    images_list = []
+    if request.method == "POST":  
+        num_topics = request.form["topics"]
         usergroup = request.form["usergroups"]
-        print("topic: " + topic)
-        print("usergp:" + usergroup)
+        users_df = pd.read_sql('SELECT client_id FROM client_cluster WHERE Cluster_AC = {}'.format(usergroup), db.session.bind)
+        users_list = users_df['client_id'].tolist()
 
+        news_obj = News()
+        news_df = pd.read_sql('SELECT news_id FROM NewsRecord WHERE client_id IN {}'.format(str(users_list).replace("[", "(").replace("]", ")")), db.session.bind)
+        news_list = news_df['news_id'].tolist()
+        filtered_news_df = pd.read_sql('SELECT * FROM Insight WHERE news_id IN {}'.format(str(news_list).replace("[", "(").replace("]", ")")), db.session.bind)
+        print(filtered_news_df)
+        print(news_df)
+        if filtered_news_df.shape[0] > 0:
+            topics = news_obj.topic_modelling(filtered_news_df, num_topics)
+            news_obj.topics_wordcloud(topics)
+            for index in range(int(num_topics)):
+                try:
+                    images_list.append([index+1, "wordcloud_{}.jpg".format(index+1)])
+                except:
+                    continue
+    return render_template('banker_dashboard.html', images_list=images_list)
 
-
-    return render_template('banker_dashboard.html')
 
 @app.route('/banker/dashboard/clientDetails',methods=['GET', 'POST'])
 # @login_required 
@@ -263,13 +276,13 @@ def client_segmentation():
     df=db.session.execute('SELECT c.client_id, u.dateofbirth, u.city, f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue FROM User u, Client c, FinancialGoal f WHERE u.banker=0 AND u.id =c.userid AND c.client_id=f.client_id')
     df = pd.DataFrame(df)
     result=clustering().AC_cluster(df=df)
+    db.session.execute("delete from client_cluster")
     for i in range(0,result.shape[0]):
-        db.session.execute("delete from client_cluster")
-        cluster=client_cluster(client_id=int(result.iloc[i,0]),dateofbirth=str(result.iloc[i,1]),city=str(result.iloc[i,2]),investmentgoal=str(result.iloc[i,3]),yeartorealisegoal=int(result.iloc[i,4]),endgoal=int(result.iloc[i,5]),	annualincome=int(result.iloc[i,6]),estimatednetworth=int(result.iloc[i,7]),topupamountmonthly=int(result.iloc[i,8]),valueofcurrentinvestment=int(result.iloc[i,9]),equity=int(result.iloc[i,10]),fixedincome=int(result.iloc[i,11]),forexcommodities=result.iloc[i,12],mutualfund=result.iloc[i,13],crypto=result.iloc[i,14],realestate=result.iloc[i,15],otherinvestment=result.iloc[i,16],prioritiesofinvestment=str(result.iloc[i,17]),riskappetite=result.iloc[i,18],dropvalue=str(result.iloc[i,19]),age=result.iloc[i,20],Cluster_AC=result.iloc[i,21])
+        cluster=client_cluster(client_id=int(result.iloc[i,0]),dateofbirth=str(result.iloc[i,1]),city=str(result.iloc[i,2]),investmentgoal=str(result.iloc[i,3]),yeartorealisegoal=int(result.iloc[i,4]),endgoal=int(result.iloc[i,5]),	annualincome=int(result.iloc[i,6]),estimatednetworth=int(result.iloc[i,7]),topupamountmonthly=int(result.iloc[i,8]),valueofcurrentinvestment=int(result.iloc[i,9]),equity=int(result.iloc[i,10]),fixedincome=int(result.iloc[i,11]),forexcommodities=int(result.iloc[i,12]),mutualfund=int(result.iloc[i,13]),crypto=int(result.iloc[i,14]),realestate=int(result.iloc[i,15]),otherinvestment=int(result.iloc[i,16]),prioritiesofinvestment=str(result.iloc[i,17]),riskappetite=int(result.iloc[i,18]),dropvalue=str(result.iloc[i,19]),age=int(result.iloc[i,20]),Cluster_AC=int(result.iloc[i,21]))
         db.session.add(cluster)
         db.session.commit()
         db.session.refresh(cluster)
-    return render_template('customer_segmentation.html',df=df)
+    return render_template('customer_segmentation.html',result=result)
 
 ### Stripe Integration
 @app.route("/checkout", methods=['GET','POST'])
@@ -313,7 +326,6 @@ def logoutbanker():
 @app.route('/client/news', methods=['GET', 'POST']) 
 def news_client(): 
      news_obj = News()
-     images_list = []
      news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
      news_summary = news_obj.get_news_summary(news_df)
      news_form = NewsFilterForm()
@@ -322,33 +334,37 @@ def news_client():
          end_date = int(str(news_form.enddate.data).replace("-", ""))
          news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
          news_summary = news_obj.get_news_summary(news_df)
-     return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form, images_list=images_list)
 
-# @app.route('/banker/news', methods=['GET', 'POST'])
-# def news_banker():
-#     news_obj = News()
-#     news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
-#     #news_summary = news_obj.get_news_summary(news_df)
+     if request.method == "POST":
+        news_id = request.form.get('news_id')
+        client_id = current_user.get_id()
+        if client_id is not None:
+            news_record_df = pd.read_sql('SELECT * FROM NewsRecord', db.session.bind)
+            record_id = news_record_df.shape[0]+1
+            db.session.execute('INSERT INTO NewsRecord (record_id, client_id, news_id) VALUES ({}, {}, "{}")'.format(record_id, client_id, news_id))
+            db.session.commit()
+            news_url_df = pd.read_sql('SELECT news_url FROM Insight WHERE news_id = "{}"'.format(news_id), db.session.bind)
+            if news_url_df.shape[0] > 0:
+                news_url = news_url_df.iloc[0]['news_url']
+                return redirect(news_url)
 
-#     news_form = NewsFilterForm()
-#     if news_form.validate_on_submit():
-#         start_date = int(str(news_form.startdate.data).replace("-", ""))
-#         end_date = int(str(news_form.enddate.data).replace("-", ""))
-#         news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
-#         #news_summary = news_obj.get_news_summary(news_df)
+     return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form)
 
-#     # All below to be moved to dashboard page
-#     num_topics = 4
-#     images_list = []
-#     topics = news_obj.topic_modelling(news_df, num_topics)
-#     news_obj.topics_wordcloud(topics)
-#     for index in range(num_topics):
-#         try:
-#             images_list.append([index+1, os.path.join("app/static/images", "wordcloud_{}.jpg".format(index+1))])
-#             # images_list.append([index+1, "images/wordcloud_{}.jpg".format(index+1)])
-#         except:
-#             continue
-#     return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
+
+@app.route('/banker/news', methods=['GET', 'POST'])
+def news_banker():
+    news_obj = News()
+    news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
+    news_summary = news_obj.get_news_summary(news_df)
+
+    news_form = NewsFilterForm()
+    if news_form.validate_on_submit():
+        start_date = int(str(news_form.startdate.data).replace("-", ""))
+        end_date = int(str(news_form.enddate.data).replace("-", ""))
+        news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
+        news_summary = news_obj.get_news_summary(news_df)
+
+    return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form)
 
 @app.route('/client/trade', methods=['GET', 'POST'])
 def show_markets():
@@ -379,6 +395,12 @@ def shop_portfolio():
 
 @app.route('/client/portfolio_details', methods=['GET', 'POST'])
 def show_port_details():
+    # user = User.query.filter_by(id=current_user.get_id()).first()
+    # client_id = Client.query.filter_by(userid=current_user.get_id()).first().client_id
+    #
+    # ## Calculating Statistics
+    # client_portfolios_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id =' + str(client_id),
+    #                                    db.session.bind)
     if request.method == "POST":
         port_id = request.form.get('port_detail')
         #print(port_id)
@@ -426,5 +448,16 @@ def show_port_details():
         # test = asset_adj_close[0][0]
         #
         # print(test)
-        #hist_df['Adj Close']
+
+        print(len(date_list))
+        # for i in range(len(date_list)):
+        #     for j in range(len(asset_list)):
+        #         print(asset_adj_close[j][i])
+        #         print(i)
+        #         print(j)
+        #         print(asset_list[j])
+
+        for j in range(len(asset_list)):
+            print(len(asset_adj_close[j]))
+            print(asset_list[j])
     return render_template('port_details.html', asset_list=asset_list, weight_list=weight_list, asset_hist_df=asset_hist_df, port_name=port_name, date_list=date_list, asset_adj_close=asset_adj_close)

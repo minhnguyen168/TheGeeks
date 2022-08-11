@@ -7,18 +7,20 @@
 		<!-- Wrapper -->
 			<div id="wrapper">
 				<h1>News Resources</h1>
-                <h3> Filter by Date Range </h3>
                 <form action="" method='POST' name="newsform">
                     {{ news_form.csrt_token }}
                     <p>{{ news_form.startdate.label }} {{news_form.startdate(class='datepicker')}} {{news_form.hidden_tag()}}</p>
                     <p>{{ news_form.enddate.label }} {{news_form.enddate(class='datepicker')}} {{news_form.hidden_tag()}}</p>
                     <p>{{news_form.submit()}}</p>
                 </form>
-                <ul class=flashes>
                 {% for index, news in news_df.iterrows()%}
-                <li><a href="{{news['news_url']}}">{{ news["news_title"] }}</a></li>
+                <div>
+                    <form action="{{url_for('news_client')}}" method="post">
+                        <p>{{ news['news_title'] }}</p>
+                        <button type="submit" name="news_id" value="{{ news['news_id'] }}">View More</button>
+                     </form>
+                </div>
                 {% endfor %}
-                </ul>
 
                 {% if news_summary != "" %}
 				<br>
@@ -26,11 +28,6 @@
                 <h3>News Summary:</h3>
                 <p>{{ news_summary }}</p>
                 {% endif %}
-
-                {% for index, wordcloud in images_list %}
-				<p>{{wordcloud}}</p>
-				<h3>Topic {{index}}: </h3><img src="{{wordcloud}}" height="240px" width="300px">
-				{% endfor %}
 	
 			</div>	
 		</div>		
