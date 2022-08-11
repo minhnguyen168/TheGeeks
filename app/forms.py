@@ -73,3 +73,26 @@ class NewsFilterForm(FlaskForm):
     startdate = DateField('Start Date', format='%Y-%m-%d', validators=[DataRequired()])
     enddate = DateField('End Date', format='%Y-%m-%d', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+# class FinancialGoalForm(FlaskForm):
+    # investmentgoal = 
+    # yeartorealisegoal = 
+    # endgoal = 
+    # age = 
+    # annualincome = 
+    # estimatednetworth = 
+    # initialamount = 
+    # topupamountmonthly = 
+    # valueofcurrentinvestment = 
+    # currentasset = 
+    # equity = 
+    # fixedincome = 
+    # forexcommodities = 
+    # mutualfund = 
+    # crypto = 
+    # realestate = 
+    # otherinvestment = 
+    # prioritiesofinvestment = 
+    # riskappetite = 
+    # dropvalue = 
+    

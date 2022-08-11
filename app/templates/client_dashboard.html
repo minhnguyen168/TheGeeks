@@ -1,5 +1,7 @@
 {% extends "client_landing.html" %}
+
 {% block content %}
+
   <!-- ***** Main Banner Area Start ***** -->
   <div class="main-banner">
     <div class="container">
@@ -35,7 +37,7 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="section-heading">
-            <div class="line-dec"></div>
+            <div class="line-dec"></div>     
             <h2>Your Investment <em>Portfolio</em>.</h2>
           </div>
         </div>
@@ -49,7 +51,7 @@
             <div class="col-lg-12">
               <br>
               <div class="row">
-                <h4><strong>$1,650</strong></h4>
+                <h4><strong>${{ portfolios | sum(attribute='amount_purchase') }}</strong></h4>
               </div>
             </div>
           </div>
@@ -94,7 +96,7 @@
             <div class="col-lg-12">
               <br>
               <div class="row">
-                <h4><strong>5</strong></h4>
+                <h4><strong>{{ portfolios | length }}</strong></h4>
               </div>
             </div>
           </div>
@@ -140,6 +142,7 @@
       </div>
 
 
+
   <!-- Scripts -->
   <!-- Bootstrap core JavaScript -->
   <!-- <script src="vendor/jquery/jquery.min.js"></script>
@@ -161,8 +164,10 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
     
     <!-- Datasets -->
-    <script>
-
+    <script type="text/javascript">
+       
+       
+  
       const startDate = new Date(2021, 1, 1);
 
       function getRandomColor() {
@@ -227,12 +232,6 @@
         }]
       };
 
-
-    </script>
-
-
-    <!-- Chart Configurations -->
-    <script>
       
       const pChart = new Chart(
         document.getElementById('portfolioGrowthChart').getContext('2d'),
@@ -306,19 +305,20 @@
         }
         }
       );
-    </script>
-
-    <script>
 
       let text = "";
-      
-      for (let i = 0; i < 5; i++) {
+
+      for (let i = 0; i < "{{portfolios|length}}"; i++) {
+
+        var p = "{{portfolios[0]}}"
   
-        text += "<li class=\"list-group-item\">" + "Stock " + i + "</li>"
+        text += "<li class=\"list-group-item\">" + "Stock" + p + "</li>"
       }
-      
+  
+
       document.getElementById("demo").innerHTML = text;
 
+     
     </script>
 
 
