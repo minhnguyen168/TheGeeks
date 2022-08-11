@@ -210,6 +210,15 @@ def bankerhome():
 @app.route('/banker/dashboard',methods=['GET', 'POST'])
 # @login_required 
 def bankerdashboard():
+
+    if request.method == "POST":
+        topic = request.form["topics"]
+        usergroup = request.form["usergroups"]
+        print("topic: " + topic)
+        print("usergp:" + usergroup)
+
+
+
     return render_template('banker_dashboard.html')
 
 @app.route('/banker/dashboard/clientDetails',methods=['GET', 'POST'])
