@@ -248,4 +248,3 @@ def show_market_details():
 #
 #
 #     return render_template('shopPortfolio.html')
->>>>>>> Stashed changes
