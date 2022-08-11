@@ -350,6 +350,12 @@ def shop_portfolio():
 
 @app.route('/client/portfolio_details', methods=['GET', 'POST'])
 def show_port_details():
+    # user = User.query.filter_by(id=current_user.get_id()).first()
+    # client_id = Client.query.filter_by(userid=current_user.get_id()).first().client_id
+    #
+    # ## Calculating Statistics
+    # client_portfolios_df = pd.read_sql('SELECT * FROM client_portfolio c WHERE c.client_id =' + str(client_id),
+    #                                    db.session.bind)
     if request.method == "POST":
         port_id = request.form.get('port_detail')
         #print(port_id)
@@ -397,5 +403,16 @@ def show_port_details():
         # test = asset_adj_close[0][0]
         #
         # print(test)
-        #hist_df['Adj Close']
+
+        print(len(date_list))
+        # for i in range(len(date_list)):
+        #     for j in range(len(asset_list)):
+        #         print(asset_adj_close[j][i])
+        #         print(i)
+        #         print(j)
+        #         print(asset_list[j])
+
+        for j in range(len(asset_list)):
+            print(len(asset_adj_close[j]))
+            print(asset_list[j])
     return render_template('port_details.html', asset_list=asset_list, weight_list=weight_list, asset_hist_df=asset_hist_df, port_name=port_name, date_list=date_list, asset_adj_close=asset_adj_close)
