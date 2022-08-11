@@ -218,12 +218,12 @@ def news_client():
          # news_summary = news_obj.get_news_summary(news_df)
      return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
 
-@app.route('/banker/news', methods=['GET', 'POST']) 
-def news_banker(): 
+@app.route('/banker/news', methods=['GET', 'POST'])
+def news_banker():
     news_obj = News()
     news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
     #news_summary = news_obj.get_news_summary(news_df)
-    
+
     news_form = NewsFilterForm()
     if news_form.validate_on_submit():
         start_date = int(str(news_form.startdate.data).replace("-", ""))
