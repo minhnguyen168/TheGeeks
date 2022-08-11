@@ -68,7 +68,7 @@ class clustering():
             plt.figure()
             pl=sns.swarmplot(x=df['Clusters_AC'], y=df[i], color= "#CBEDDD", alpha=0.5 )
             pl=sns.boxenplot(x=df['Clusters_AC'], y=df[i])
-            plt.savefig(f'app/static/images/AC_cluster_{i}.png')
+            plt.savefig(f'app/static/images/AC_cluster_{i}.jpg')
         return df
 
 

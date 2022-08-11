@@ -70,6 +70,45 @@ class BankerLoginForm(FlaskForm):
 
     submit = SubmitField('Login') 
 
+class BankerBuildForm(FlaskForm):
+    name =  StringField("Name", validators=[InputRequired()]) 
+    risk = IntegerField("Risk Level",validators=[InputRequired()])
+    mininvest= IntegerField("Minimum Invesment Amount",validators=[InputRequired()])
+    description = StringField("Description",validators=[InputRequired()])
+    asset1 =  StringField("Asset 1", validators=[InputRequired()]) 
+    asset1_percentage =  IntegerField("Percentage of Asset 1", validators=[InputRequired()])
+    asset1_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
+    asset2 =  StringField("Asset 2", validators=[InputRequired()]) 
+    asset2_percentage =  IntegerField("Percentage of Asset 2", validators=[InputRequired()])
+    asset2_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
+    asset3 =  StringField("Asset 3", validators=[InputRequired()]) 
+    asset3_percentage =  IntegerField("Percentage of Asset 3", validators=[InputRequired()])
+    asset3_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund']) 
+    asset4 =  StringField("Asset 4", validators=[InputRequired()]) 
+    asset4_percentage =  IntegerField("Percentage of Asset 4", validators=[InputRequired()])
+    asset4_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
+    asset5 =  StringField("Asset 5", validators=[InputRequired()]) 
+    asset5_percentage =  IntegerField("Percentage of Asset 5", validators=[InputRequired()])
+    asset5_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
+    asset6 =  StringField("Asset 6", validators=[InputRequired()]) 
+    asset6_percentage =  IntegerField("Percentage of Asset 6", validators=[InputRequired()])
+    asset6_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
+    asset7 =  StringField("Asset 7", validators=[InputRequired()]) 
+    asset7_percentage =  IntegerField("Percentage of Asset 7", validators=[InputRequired()])
+    asset7_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
+    asset8 =  StringField("Asset 8", validators=[InputRequired()]) 
+    asset8_percentage =  IntegerField("Percentage of Asset 8", validators=[InputRequired()])
+    asset8_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
+    asset9 =  StringField("Asset 9", validators=[InputRequired()]) 
+    asset9_percentage =  IntegerField("Percentage of Asset 9", validators=[InputRequired()])
+    asset9_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
+    asset10 =  StringField("Asset 10", validators=[InputRequired()]) 
+    asset10_percentage =  IntegerField("Percentage of Asset 10", validators=[InputRequired()])
+    asset10_type =  SelectField("Type of Asset ", validators=[InputRequired()], choices=['Bond','Stock','Reits','Mutual Fund'])
+
+
+
+
 
 class NewsFilterForm(FlaskForm):
     startdate = DateField('Start Date', format='%Y-%m-%d', validators=[DataRequired()])
