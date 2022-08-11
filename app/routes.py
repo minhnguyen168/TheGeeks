@@ -38,33 +38,6 @@ def mainpage():
 def element():
     return render_template('elements.html')
 
-@app.route('/client',methods=['GET', 'POST'])
-def client():
-    if current_user.is_authenticated: 
-        return redirect(url_for('clienthome'))
-    clientregister_form = ClientRegistrationForm()
-    clientlogin_form=ClientLoginForm()
-    if clientregister_form.validate_on_submit():
-        print('valid')
-        hashed_password = bcrypt.generate_password_hash(clientregister_form.password.data).decode('utf-8')
-        user = User(name=clientregister_form.name.data, NRIC=clientregister_form.nric.data, password=hashed_password,email=clientregister_form.email.data,banker=0)
-        db.session.add(user)
-        db.session.commit()
-        db.session.refresh(user)
-        newclient = Client(userid=user.id)
-        db.session.add(newclient)
-        db.session.commit()
-        flash("Your account has been created! You are now able to log in", 'success') 
-        return redirect('/client#login')
-    if clientlogin_form.validate_on_submit():
-        user = User.query.filter_by(email=clientlogin_form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, clientlogin_form.password.data) and user.banker==0:
-            login_user(user, remember=clientlogin_form.remember.data)
-            next_page = request.args.get('next')
-            return redirect(url_for('clienthome'))
-        else:
-            flash('Login Unsuccessful. Please check username and password', 'danger')
-    return render_template('client.html',clientregister_form=clientregister_form, clientlogin_form=clientlogin_form)
 
 @app.route('/client_login',methods=['GET', 'POST'])
 def client_login():
@@ -128,7 +101,21 @@ def banker_login():
 #Become a client page
 @app.route('/become_a_client',methods=['GET', 'POST'])
 def become_a_client():
-    return render_template('become_a_client.html')
+    if current_user.is_authenticated: 
+        return redirect(url_for('clienthome'))
+    clientregister_form = ClientRegistrationForm()
+    if clientregister_form.validate_on_submit():
+        print('valid')
+        hashed_password = bcrypt.generate_password_hash(clientregister_form.password.data).decode('utf-8')
+        user = User(name=clientregister_form.name.data, NRIC=clientregister_form.nric.data, password=hashed_password,email=clientregister_form.email.data, city=clientregister_form.city.data,dateofbirth=clientregister_form.dateofbirth.data,contactno=clientregister_form.contactno.data,banker=0)
+        db.session.add(user)
+        db.session.commit()
+        db.session.refresh(user)
+        newclient = Client(userid=user.id)
+        db.session.add(newclient)
+        db.session.commit()
+        flash("Your account has been created! You are now able to log in", 'success') 
+    return render_template('become_a_client.html',clientregister_form=clientregister_form)
 
 #Build portfolio page
 @app.route('/banker/build_portfolio',methods=['GET', 'POST'])

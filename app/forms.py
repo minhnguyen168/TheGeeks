@@ -14,8 +14,9 @@ class ClientRegistrationForm(FlaskForm):
     nric = StringField("NRIC", validators=[InputRequired(), Length(min=2, max=20)]) 
     email = StringField('Email', validators=[InputRequired(), Email()]) 
     password = PasswordField('Password', validators=[InputRequired()])
-    #contactno = StringField('Contact No.', validators=[Required(), Length(min=8, max=8)]) 
-
+    city=SelectField("City",validators=[InputRequired],choices=['Singapore','Hongkong'])
+    contactno = StringField('Contact No.', validators=[Required(), Length(min=8, max=8)]) 
+    dateofbirth = DateField('DOB', format='%Y/%m/%d', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[InputRequired(), EqualTo('password')])
 
     submit = SubmitField('Sign Up') 
@@ -48,8 +49,9 @@ class BankerRegistrationForm(FlaskForm):
     nric = StringField("NRIC", validators=[InputRequired(), Length(min=2, max=20)]) 
     email = StringField('Email', validators=[InputRequired(), Email()]) 
     password = PasswordField('Password', validators=[InputRequired()])
-    #contactno = StringField('Contact No.', validators=[Required(), Length(min=8, max=8)]) 
-
+    dateofbirth = DateField('DOB', format='%Y-%m-%d', validators=[DataRequired()])
+    contactno = StringField('Contact No.', validators=[Required(), Length(min=8, max=8)]) 
+    city=SelectField("City",validators=[InputRequired],choices=['Singapore','Hongkong'])
     confirm_password = PasswordField('Confirm Password', validators=[InputRequired(), EqualTo('password')])
 
     submit = SubmitField('Sign Up') 
