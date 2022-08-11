@@ -167,7 +167,6 @@ def clienthome():
 @app.route('/client/dashboard',methods=['GET', 'POST'])
 # @login_required 
 def clientdashboard():
-
     user = User.query.filter_by(id=current_user.get_id()).first()
     client_id  = Client.query.filter_by(userid=current_user.get_id()).first().client_id
     portfolios = client_portfolio.query.filter_by(client_id=client_id).all()
@@ -187,8 +186,15 @@ def bankerdashboard():
 @app.route('/banker/dashboard/clientDetails',methods=['GET', 'POST'])
 # @login_required 
 def bankerclientdetails():
+
     return render_template('banker_client_details.html')
 
+@app.route('/banker/clientsegmentation',methods=['GET', 'POST'])
+# @login_required 
+def client_segmentation():
+    df=db.session.execute('SELECT c.client_id, u.dateofbirth, u.city, f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue FROM User u, Client c, FinancialGoal f WHERE u.banker=0 AND u.id =c.userid AND c.client_id=f.client_id')
+    df = pd.DataFrame(df)
+    return render_template('customer_segmentation.html')
 ### Stripe Integration
 @app.route("/checkout", methods=['GET','POST'])
 @login_required
@@ -233,14 +239,14 @@ def news_client():
      news_obj = News()
      images_list = []
      news_df = pd.read_sql('SELECT * FROM Insight', db.session.bind)
-     # news_summary = news_obj.get_news_summary(news_df)
+     news_summary = news_obj.get_news_summary(news_df)
      news_form = NewsFilterForm()
      if news_form.validate_on_submit():
          start_date = int(str(news_form.startdate.data).replace("-", ""))
          end_date = int(str(news_form.enddate.data).replace("-", ""))
          news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
-         # news_summary = news_obj.get_news_summary(news_df)
-     return render_template('news.html', news_df=news_df, news_summary="news_summary", news_form=news_form, images_list=images_list)
+         news_summary = news_obj.get_news_summary(news_df)
+     return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form, images_list=images_list)
 
 @app.route('/banker/news', methods=['GET', 'POST'])
 def news_banker():
