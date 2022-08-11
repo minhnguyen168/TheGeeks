@@ -7,7 +7,6 @@
 		<!-- Wrapper -->
 			<div id="wrapper">
 				<h1>News Resources</h1>
-                <h3> Filter by Date Range </h3>
                 <form action="" method='POST' name="newsform">
                     {{ news_form.csrt_token }}
                     <p>{{ news_form.startdate.label }} {{news_form.startdate(class='datepicker')}} {{news_form.hidden_tag()}}</p>

@@ -211,16 +211,29 @@ def bankerhome():
 @app.route('/banker/dashboard',methods=['GET', 'POST'])
 # @login_required 
 def bankerdashboard():
-
-    if request.method == "POST":
-        topic = request.form["topics"]
+    images_list = []
+    if request.method == "POST":  
+        num_topics = request.form["topics"]
         usergroup = request.form["usergroups"]
-        print("topic: " + topic)
-        print("usergp:" + usergroup)
+        users_df = pd.read_sql('SELECT client_id FROM client_cluster WHERE Cluster_AC = {}'.format(usergroup), db.session.bind)
+        users_list = users_df['client_id'].tolist()
 
+        news_obj = News()
+        news_df = pd.read_sql('SELECT news_id FROM NewsRecord WHERE client_id IN {}'.format(str(users_list).replace("[", "(").replace("]", ")")), db.session.bind)
+        news_list = news_df['news_id'].tolist()
+        filtered_news_df = pd.read_sql('SELECT * FROM Insight WHERE news_id IN {}'.format(str(news_list).replace("[", "(").replace("]", ")")), db.session.bind)
+        print(filtered_news_df)
+        print(news_df)
+        if filtered_news_df.shape[0] > 0:
+            topics = news_obj.topic_modelling(filtered_news_df, num_topics)
+            news_obj.topics_wordcloud(topics)
+            for index in range(int(num_topics)):
+                try:
+                    images_list.append([index+1, "wordcloud_{}.jpg".format(index+1)])
+                except:
+                    continue
+    return render_template('banker_dashboard.html', images_list=images_list)
 
-
-    return render_template('banker_dashboard.html')
 
 @app.route('/banker/dashboard/clientDetails',methods=['GET', 'POST'])
 # @login_required 
