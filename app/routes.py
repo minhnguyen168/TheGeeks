@@ -215,3 +215,32 @@ def logoutbanker():
 #         news_df = pd.read_sql('SELECT * FROM Insight WHERE published_date >= {} AND published_date <= {}'.format(start_date, end_date), db.session.bind)
 #         news_summary = news_obj.get_news_summary(news_df)
 #     return render_template('news.html', news_df=news_df, news_summary=news_summary, news_form=news_form)
+
+@app.route('/client/trade', methods=['GET', 'POST'])
+def show_markets():
+    markets = ['NVDA', 'BBBY', 'GME', 'NVAX', 'MU', 'INTC', 'LMND', 'NCLH', 'VRNA', 'AMAT', 'U', 'NLSN']
+
+    tickers = trade.get_market_details(markets)
+
+    return render_template('trade.html', tickers=tickers, markets=markets)
+
+@app.route('/client/trade/details', methods=['GET','POST'])
+def show_market_details():
+    if request.method == "POST":
+        market = request.form.get('ticker_detail')
+        print(market)
+        # market = 'NVAX'
+        ticker = trade.get_market_details([market])
+        ticker_info = ticker[0].info # since we are only focused on one
+        today = trade.get_today()
+        periods = trade.get_holding_periods(today)
+        hist_df = trade.get_hist_ret(market, periods, today)
+        hist_ret = trade.cal_port_ret(len(periods), hist_df)
+    return render_template('trade_details.html', market=market, ticker_info=ticker_info, hist_ret=hist_ret)
+
+# @app.route('/client/portfolio', methods=['GET', 'POST'])
+# def show_markets():
+#
+#
+#     return render_template('shopPortfolio.html')
+

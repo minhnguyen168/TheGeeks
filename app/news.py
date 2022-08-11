@@ -1,3 +1,4 @@
+
 # import pandas as pd
 # import uuid
 # import re
@@ -6,7 +7,6 @@
 # from app.models import (Insight)
 # from app import db
 # from gensim.summarization import summarize
-
 
 # class News():
 
@@ -40,8 +40,6 @@
 #             db.session.add(news)
 #             db.session.commit()
 #         return news_df
-    
-
 #     def get_news_summary(self, filtered_news_df):
 #         news_summary = ""
 #         if len(filtered_news_df) > 0:

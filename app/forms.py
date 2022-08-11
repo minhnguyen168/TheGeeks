@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm 
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField, SelectField, IntegerField
 from wtforms.fields import DateField
-from wtforms.validators import InputRequired, Length, Email, EqualTo, ValidationError, DataRequired
+from wtforms.validators import InputRequired, Length, Email, EqualTo, ValidationError, DataRequired, NumberRange
 from app.models import (User)
 from flask_login import current_user
 
@@ -74,17 +74,16 @@ class NewsFilterForm(FlaskForm):
     enddate = DateField('End Date', format='%Y-%m-%d', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
-# class FinancialGoalForm(FlaskForm):
-    # investmentgoal = 
-    # yeartorealisegoal = 
-    # endgoal = 
-    # age = 
-    # annualincome = 
-    # estimatednetworth = 
-    # initialamount = 
-    # topupamountmonthly = 
-    # valueofcurrentinvestment = 
-    # currentasset = 
+class FinancialGoalForm(FlaskForm):
+    investmentgoal = SelectField("Investment Goals", validators=[InputRequired()], choices=['House','Car','Children Education','Retirement','General Investment'])
+    yeartorealisegoal = IntegerField("I want to realise my goal in ...", validators=[InputRequired(), NumberRange(min=1,max=100)],render_kw={"placeholder": "Years"})
+    endgoal = IntegerField("My goal requires...", validators=[InputRequired()],render_kw={"placeholder": "$"})
+    age = IntegerField("I am ", validators=[InputRequired()],render_kw={"placeholder": "years old"})
+    annualincome = IntegerField("My annual income (including other sources of income such as rental income) is approximately $", validators=[InputRequired()])
+    estimatednetworth = IntegerField("My estimated net worth is approximately $", validators=[InputRequired()])
+    initialamount = IntegerField("I am looking to invest an initial amount of $", validators=[InputRequired()])
+    topupamountmonthly = IntegerField("Each month, I am looking to invest $", validators=[InputRequired()])
+    valueofcurrentinvestment = IntegerField("The estimated value of my current investment portfolio is $", validators=[InputRequired()])
     # equity = 
     # fixedincome = 
     # forexcommodities = 
