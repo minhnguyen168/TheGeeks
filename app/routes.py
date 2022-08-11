@@ -198,7 +198,7 @@ def calendarapi(clientid,startYYYYMMDDHHMM,endYYYYMMDDHHMM):
     organizer.params['cn'] = vText(current_user.name)
     organizer.params['role'] = vText('Banker')
     event['organizer'] = organizer
-    event['location'] = vText('http://ec2-18-141-3-51.ap-southeast-1.compute.amazonaws.com:5000/chat/'+str(clientid))
+    event['location'] = vText('http://127.0.0.1/chat/'+str(clientid))
 
     # Adding events to calendar
     cal.add_component(event)
