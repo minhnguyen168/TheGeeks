@@ -256,8 +256,6 @@ def show_markets():
 def show_market_details():
     if request.method == "POST":
         market = request.form.get('ticker_detail')
-        print(market)
-        # market = 'NVAX'
         ticker = trade.get_market_details([market])
         ticker_info = ticker[0].info # since we are only focused on one
         today = trade.get_today()
@@ -266,9 +264,10 @@ def show_market_details():
         hist_ret = trade.cal_port_ret(len(periods), hist_df)
     return render_template('trade_details.html', market=market, ticker_info=ticker_info, hist_ret=hist_ret)
 
-# @app.route('/client/portfolio', methods=['GET', 'POST'])
-# def show_markets():
-#
-#
-#     return render_template('shopPortfolio.html')
-
+@app.route('/client/portfolio', methods=['GET', 'POST'])
+def shop_portfolio():
+    df = pd.read_sql('SELECT * FROM Portfolio', db.session.bind)
+    #html_table = df.to_html()
+    #shopPortfolio.show(port_df)
+    #return render_template('shopPortfolio.html', html_table=html_table)
+    return render_template('shopPortfolio.html', tables=[df.to_html(classes='data')], titles=df.columns.values)
