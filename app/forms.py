@@ -75,23 +75,22 @@ class NewsFilterForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class FinancialGoalForm(FlaskForm):
-    investmentgoal = SelectField("Investment Goals", validators=[InputRequired()], choices=['House','Car','Children Education','Retirement','General Investment'])
+    investmentgoal = SelectField("Investment Goals - I am investing for ", validators=[InputRequired()], choices=['House','Car','Children Education','Retirement','General Investment'])
     yeartorealisegoal = IntegerField("I want to realise my goal in ...", validators=[InputRequired(), NumberRange(min=1,max=100)],render_kw={"placeholder": "Years"})
     endgoal = IntegerField("My goal requires...", validators=[InputRequired()],render_kw={"placeholder": "$"})
-    age = IntegerField("I am ", validators=[InputRequired()],render_kw={"placeholder": "years old"})
     annualincome = IntegerField("My annual income (including other sources of income such as rental income) is approximately $", validators=[InputRequired()])
     estimatednetworth = IntegerField("My estimated net worth is approximately $", validators=[InputRequired()])
     initialamount = IntegerField("I am looking to invest an initial amount of $", validators=[InputRequired()])
     topupamountmonthly = IntegerField("Each month, I am looking to invest $", validators=[InputRequired()])
     valueofcurrentinvestment = IntegerField("The estimated value of my current investment portfolio is $", validators=[InputRequired()])
-    # equity = 
-    # fixedincome = 
-    # forexcommodities = 
-    # mutualfund = 
-    # crypto = 
-    # realestate = 
-    # otherinvestment = 
-    # prioritiesofinvestment = 
-    # riskappetite = 
-    # dropvalue = 
-    
+    equity = IntegerField("Equity (Stocks)", validators=[InputRequired()],render_kw={"placeholder": "%"})
+    fixedincome = IntegerField("Fixed Income (Bonds)", validators=[InputRequired()],render_kw={"placeholder": "%"})
+    forexcommodities = IntegerField("Commodities / Forex / Derivatives", validators=[InputRequired()],render_kw={"placeholder": "%"})
+    mutualfund = IntegerField("Mutual Funds (Unit Trust) / Financial Planner", validators=[InputRequired()],render_kw={"placeholder": "%"})
+    crypto = IntegerField("Cryptocurrency", validators=[InputRequired()],render_kw={"placeholder": "%"})
+    realestate = IntegerField("Real Estate", validators=[InputRequired()],render_kw={"placeholder": "%"})
+    otherinvestment = IntegerField("Others", validators=[InputRequired()],render_kw={"placeholder": "%"})
+    prioritiesofinvestment = RadioField("When investing, my priorities are ", validators=[InputRequired()], choices=[('Maximise my potential gain','Maximise Gain'),('Equal emphasis on maximising gain & minimising loss','Equal Emphasis'),('Minimise my potential loss','Minimise Loss')])
+    riskappetite = IntegerField("I rate my risk appetite (1-12)", validators=[InputRequired()],render_kw={"placeholder": "1 being safest, 12 being riskiest."})
+    dropvalue = RadioField("I understand that markets are at times volatile. If my investment portfolio loses 10 percent of its value, I would ", validators=[InputRequired()], choices=[('Buy More','Buy More'),('Do Nothing','Do Nothing'),('Sell parts of my portfolio','Sell parts of my portfolio'),('Sell Everything','Sell Everything')])
+    submit = SubmitField('Submit')
