@@ -1779,6 +1779,50 @@ Details Page Style
 .item-details-page form input::placeholder {
   color: #fff;
 }
+.item-details-page .buttons {
+  margin-top: 30px;
+  display: flex;
+  justify-content: start;
+}
+
+.item-details-page .owl-banner {
+  margin-top: -40px;
+}
+
+.item-details-page .owl-nav {
+  position: absolute;
+  width: 100%;
+  margin: 0 auto;
+  bottom: -76px;
+  text-align: center;
+}
+
+.item-details-page .owl-nav .owl-prev {
+  margin-right: 7.5px;
+}
+
+.item-details-page .owl-nav .owl-next {
+  margin-left: 7.5px;
+}
+
+.item-details-page .owl-nav .owl-prev span,
+.item-details-page .owl-nav .owl-next span  {
+  width: 46px;
+  height: 46px;
+  line-height: 46px;
+  font-size: 24px;
+  display: inline-block;
+  color: #7453fc;
+  background-color: #fff;
+  border-radius: 50%;
+  opacity: 1;
+  transition: all .3s;
+}
+
+.item-details-page .owl-nav .owl-prev span:hover,
+.item-details-page .owl-nav .owl-next span:hover {
+  opacity: 1;
+}
 
 .item-details-page button {
   font-size: 14px;
