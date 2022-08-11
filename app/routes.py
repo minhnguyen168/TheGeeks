@@ -1,9 +1,10 @@
 from re import A
 from flask_login.mixins import UserMixin
-from app import app, db, bcrypt, login_manager
+from app import app, db, bcrypt, login_manager, socketio
+from flask_socketio import SocketIO, join_room
 from flask import render_template
 from flask import url_for 
-from flask import flash
+from flask import flash, session
 from flask import redirect
 from flask import request, abort
 from flask import jsonify
@@ -120,6 +121,34 @@ def become_a_client():
         db.session.commit()
         flash("Your account has been created! You are now able to log in", 'success') 
     return render_template('become_a_client.html',clientregister_form=clientregister_form)
+
+#chat
+
+@app.route('/chat/<id>')
+@login_required
+def sessions(id):
+    session['id'] = id
+    return render_template('session.html',url='/chat/'+str(id))
+
+def messageReceived(methods=['GET', 'POST']):
+    print('message was received!!!')
+
+@socketio.on('connect')
+def connect():
+    print('joining room'+str(session['id']))
+    room = session["id"]
+    join_room(session['id'])
+    json = {'user_name': current_user.name, 'message': 'is connected.'}
+    socketio.emit("my response", json, callback=messageReceived, room=room)
+
+@socketio.on('my event')
+def handle_my_custom_event(json, methods=['GET', 'POST']):
+    room = session["id"]
+    join_room(room)
+    print('received my event: ' + str(json))
+    socketio.emit('my response', json, callback=messageReceived, room=room)
+
+#endchat
 
 @app.route('/client/financialgoals',methods=['GET', 'POST'])
 @login_required 

@@ -4,11 +4,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_socketio import SocketIO
+
 
 
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'f9668b6e45f66487549fc7c385f063cf'
+socketio = SocketIO(app)
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
