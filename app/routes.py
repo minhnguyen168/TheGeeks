@@ -20,6 +20,7 @@ import yfinance as yf
 import stripe
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
 from app.cluster_model import (clustering)
 
 
@@ -457,7 +458,33 @@ def show_port_details():
         #         print(j)
         #         print(asset_list[j])
 
-        for j in range(len(asset_list)):
-            print(len(asset_adj_close[j]))
-            print(asset_list[j])
+        price_list = [] # contain the portfolio market price sum
+
+        for index in range(len(date_list)):
+            price_sum = 0
+            for asset in range(len(asset_list)):
+                price_sum = price_sum + asset_adj_close[asset][index]
+            price_list.append(price_sum)
+
+        plt.switch_backend('Agg')
+        # fig, ax = plt.subplots(nrows=1, ncols=1)  # create figure & 1 axis
+        # ax.plot(date_list, price_list)
+        # fig.savefig('static/images/portfolio.png')  # save the figure to file
+        # plt.close(fig)
+
+        plt.plot(date_list, price_list)
+        plt.xlabel('Year')
+        plt.ylabel('Portfolio value')
+        plt.title('Changes in Portfolio Market Price Over the Past 5 Years')
+        plt.legend(['Market Price'])
+
+        # save the figure
+        plt.savefig('app/static/images/portfolio.png', dpi=300, bbox_inches='tight')
+        plt.show()
+
+        plt.close()
+        # print(len(price_list))
+        # print(len(date_list))
+        # print(price_list[5])
+        # print(date_list[5])
     return render_template('port_details.html', asset_list=asset_list, weight_list=weight_list, asset_hist_df=asset_hist_df, port_name=port_name, date_list=date_list, asset_adj_close=asset_adj_close)
