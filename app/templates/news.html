@@ -13,6 +13,14 @@
                     <p>{{ news_form.enddate.label }} {{news_form.enddate(class='datepicker')}} {{news_form.hidden_tag()}}</p>
                     <p>{{news_form.submit()}}</p>
                 </form>
+
+                {% if news_summary != "" %}
+				<br>
+				<br>
+                <h3>News Summary:</h3>
+                <p>{{ news_summary }}</p>
+                {% endif %}
+
                 {% for index, news in news_df.iterrows()%}
                 <div>
                     <form action="{{url_for('news_client')}}" method="post">
@@ -21,13 +29,6 @@
                      </form>
                 </div>
                 {% endfor %}
-
-                {% if news_summary != "" %}
-				<br>
-				<br>
-                <h3>News Summary:</h3>
-                <p>{{ news_summary }}</p>
-                {% endif %}
 	
 			</div>	
 		</div>		

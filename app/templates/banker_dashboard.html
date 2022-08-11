@@ -189,11 +189,13 @@
                     <br>
                     <input class="btn btn-primary" type="submit" value="Submit">
                   </form>
+                  {% for index, wordcloud in images_list %}
                   <div class="col-lg-3">
-                    {% for index, wordcloud in images_list %}
-                    <h3>Topic {{index}}: </h3><img src="{{ url_for('static', filename='images/' + wordcloud)}}" height="240px" width="300px">
-                    {% endfor %}
+                    <br>
+                    <h3>Topic {{index}}: </h3>
+                    <img src="{{ url_for('static', filename='images/' + wordcloud)}}" height="240px" width="300px">            
                   </div>
+                  {% endfor %}
                 </div>
               </div>
             </div>
