@@ -8,7 +8,7 @@ from app import db
 
 # News API and Summarisation
 from newsapi import NewsApiClient
-# from gensim.summarization import summarize
+from gensim.summarization import summarize
 
 # LDA Model
 import gensim
@@ -65,7 +65,7 @@ class News():
             db.session.commit()
         return news_df
     
-    '''
+    
     def get_news_summary(self, filtered_news_df):
         news_summary = ""
         if len(filtered_news_df) > 0:
@@ -82,7 +82,7 @@ class News():
             except:
                 news_summary = ""
         return news_summary
-    '''
+    
 
     def remove_stopwords(self, text, stopwords_list, lemma):
         string = ""
