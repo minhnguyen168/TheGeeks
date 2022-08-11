@@ -173,11 +173,16 @@ def banker_view_client():
     client=pd.DataFrame(client)
     name= db.session.execute('SELECT u.name FROM Client c, User u WHERE c.client_id='+ str(client.iloc[0,0]) + ' AND c.userid=u.id')
     result=db.session.execute('SELECT f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue  FROM Client c, FinancialGoal f WHERE c.client_id=' + str(client.iloc[0,0]) +  ' AND c.client_id=f.client_id')
-    for i in range(1,client_id.shape[0]):
+    name=pd.DataFrame(name)
+    result=pd.DataFrame(result)
+    for i in range(1,client.shape[0]):
         holder1=db.session.execute('SELECT f.investmentgoal, f.yeartorealisegoal, f.endgoal, f.annualincome, f.estimatednetworth, f.topupamountmonthly, f.valueofcurrentinvestment, f.equity, f.fixedincome, f.forexcommodities, f.mutualfund, f.crypto, f.realestate, f.otherinvestment, f.prioritiesofinvestment, f.riskappetite, f.dropvalue  FROM Client c, FinancialGoal f WHERE c.client_id=' + str(client.iloc[i,0]) +  ' AND c.client_id=f.client_id')
         holder2=db.session.execute('SELECT u.name FROM Client c, User u WHERE c.client_id='+ str(client.iloc[0,0]) + ' AND c.userid=u.id')
-        name=name.append(holder2)
+        holder1=pd.DataFrame(holder1)
+        holder2=pd.DataFrame(holder2)
         result=result.append(holder1)
+        name=name.append(holder2)
+        
     return render_template('banker_view_client.html',result=result,name=name)
 
 @app.route('/client/home',methods=['GET', 'POST'])
