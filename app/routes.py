@@ -15,6 +15,7 @@ from app.forms import (ClientRegistrationForm, ClientLoginForm, BankerRegistrati
 from app.models import (User, Client, Banker, FinancialGoal, Portfolio, client_cluster, client_portfolio)
 from app.news import (News)
 from app import trade
+import yfinance as yf
 import stripe
 import pandas as pd
 import os
@@ -342,8 +343,59 @@ def show_market_details():
 
 @app.route('/client/portfolio', methods=['GET', 'POST'])
 def shop_portfolio():
-    df = pd.read_sql('SELECT * FROM Portfolio', db.session.bind)
-    #html_table = df.to_html()
-    #shopPortfolio.show(port_df)
-    #return render_template('shopPortfolio.html', html_table=html_table)
-    return render_template('shopPortfolio.html', tables=[df.to_html(classes='data')], titles=df.columns.values)
+    df = db.session.execute('SELECT * FROM Portfolio')
+    df = pd.DataFrame(df)
+    print(df)
+    return render_template('shopPortfolio.html', df=df)
+
+@app.route('/client/portfolio_details', methods=['GET', 'POST'])
+def show_port_details():
+    if request.method == "POST":
+        port_id = request.form.get('port_detail')
+        #print(port_id)
+        df = db.session.execute('SELECT * FROM Portfolio where portfolio_id = ' + str(port_id)) # one particular row
+        df = pd.DataFrame(df)
+        today = trade.get_today()
+        periods = trade.get_holding_periods(today)
+        prev_5_yr = periods[3] # third element returns date for 5 years ago
+        num_assets = 10 # we assume that all portfolio have 10 assets
+        asset_list = []
+        weight_list = [] # store corresponding weight for each asset for a particular portfolio
+        asset_hist_df = []
+        asset_adj_close = [] # [[] for i in range(num_assets)]
+        port_name = ''
+
+        for key, value in df.iterrows(): # will only iterate once -> to populate the asset and its weights
+            port_name = value['name']
+            asset_list.append(value['asset1'])
+            asset_list.append(value['asset2'])
+            asset_list.append(value['asset3'])
+            asset_list.append(value['asset4'])
+            asset_list.append(value['asset5'])
+            asset_list.append(value['asset6'])
+            asset_list.append(value['asset7'])
+            asset_list.append(value['asset8'])
+            asset_list.append(value['asset9'])
+            asset_list.append(value['asset10'])
+
+            weight_list.append(value['asset1_percentage'])
+            weight_list.append(value['asset2_percentage'])
+            weight_list.append(value['asset3_percentage'])
+            weight_list.append(value['asset4_percentage'])
+            weight_list.append(value['asset5_percentage'])
+            weight_list.append(value['asset6_percentage'])
+            weight_list.append(value['asset7_percentage'])
+            weight_list.append(value['asset8_percentage'])
+            weight_list.append(value['asset9_percentage'])
+            weight_list.append(value['asset10_percentage'])
+
+        for i in range(num_assets):
+            asset_hist_df.append(yf.download(asset_list[i], start=prev_5_yr, end=today))
+            asset_adj_close.append((asset_hist_df[i])['Adj Close'].tolist()) # each element in the list will be a list of the adj close of the particular asset
+
+        date_list = (asset_hist_df[0]).index.tolist()
+        # test = asset_adj_close[0][0]
+        #
+        # print(test)
+        #hist_df['Adj Close']
+    return render_template('port_details.html', asset_list=asset_list, weight_list=weight_list, asset_hist_df=asset_hist_df, port_name=port_name, date_list=date_list, asset_adj_close=asset_adj_close)

@@ -21,14 +21,46 @@
 
 					</header>
                 {% block content %}
-				<div class=ticker_box>
-					{{tables}}
-					{{titles}}
+				<div>
 
-					{% for table in tables %}
-					  {{titles[loop.index]}}
-					  {{ table|safe }}
-					{% endfor %}
+					<table>
+						<tr>
+							<th>Name</th>
+							<th>Description</th>
+							<th>Risk</th>
+							<th>Minimum Investment Needed</th>
+							<th>Asset | Type | Proportion</th>
+							<th>More</th>
+						 </tr>
+						{% for key,value in df.iterrows() %}
+						 <tr>
+							 <td>{{ value['name']}}</td>
+							 <td>{{ value['description']}}</td>
+							 <td>{{ value['risk']}}</td>
+							 <td>{{ value['mininvest']}}</td>
+							 <td>
+								 <p>{{ value['asset1']}} | {{ value['asset1_type']}} | {{ value['asset1_percentage']}}%</p>
+								 <p>{{ value['asset2']}} | {{ value['asset2_type']}} | {{ value['asset2_percentage']}}%</p>
+								 <p>{{ value['asset3']}} | {{ value['asset3_type']}} | {{ value['asset3_percentage']}}%</p>
+								 <p>{{ value['asset4']}} | {{ value['asset4_type']}} | {{ value['asset4_percentage']}}%</p>
+								 <p>{{ value['asset5']}} | {{ value['asset5_type']}} | {{ value['asset5_percentage']}}%</p>
+								 <p>{{ value['asset6']}} | {{ value['asset6_type']}} | {{ value['asset6_percentage']}}%</p>
+								 <p>{{ value['asset7']}} | {{ value['asset7_type']}} | {{ value['asset7_percentage']}}%</p>
+								 <p>{{ value['asset8']}} | {{ value['asset8_type']}} | {{ value['asset8_percentage']}}%</p>
+								 <p>{{ value['asset9']}} | {{ value['asset9_type']}} | {{ value['asset9_percentage']}}%</p>
+								 <p>{{ value['asset10']}} | {{ value['asset10_type']}} | {{ value['asset10_percentage']}}%</p>
+							 </td>
+							 <td>
+								 <button>Buy</button>
+								 <form action="{{ url_for('show_port_details')}}" method="post">
+<!--									 <input class="port_button" name="port_detail" type="submit" value="Detail" disabled>-->
+<!--									 <input class="port_button" name="port_detail" type="hidden" value="{{value['portfolio_id']}}">-->
+									 <button class="port_button" name="port_detail" type="submit" value="{{value['portfolio_id']}}">Detail</button>
+								</form>
+							 </td>
+						 </tr>
+						{% endfor %}
+					</table>
 				</div>
 
 
