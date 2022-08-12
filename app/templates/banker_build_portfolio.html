@@ -1,4 +1,4 @@
-{% extends "client_landing.html" %}
+{% extends "banker_landing.html" %}
 {% block content %}
 <div class="top-seller">
 <div class ="container">
@@ -203,7 +203,7 @@
                 </div>
             {% else %}
 
-                {{ portfoliobuild_form.asset4.class("form-control form-control-lg") }}
+                {{ portfoliobuild_form.asset4(class="form-control form-control-lg") }}
             {% endif %}
         </div>
         <div class="col-lg-4">
@@ -487,8 +487,10 @@
   {% endif %}
 </div>
 
+    
         <br>
         </div>
+        <br>
         <ul class="actions">
             {{ portfoliobuild_form.submit(class="btn btn-outline-info") }}
         </ul>
